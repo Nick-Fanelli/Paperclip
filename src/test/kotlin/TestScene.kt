@@ -1,35 +1,38 @@
-import com.paperclipengine.graphics.Mesh
-import com.paperclipengine.graphics.MeshFactory
+import com.paperclipengine.graphics.QuadRenderer
+import com.paperclipengine.graphics.Transform
 import com.paperclipengine.scene.Scene
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL30.*
+import org.joml.Vector3f
 
 class TestScene : Scene() {
 
-    private val vertices = floatArrayOf(
-        -0.5f, -0.5f, 0f,
-        0.5f, -0.5f, 0f,
-        0f, 0.5f, 0f
+    private lateinit var quadRenderer: QuadRenderer
+
+    private val transform = Transform(
+        Vector3f(0.0f, 0.0f, 0.0f)
     )
-
-    private val indices = intArrayOf(0, 1, 2)
-
-    private lateinit var mesh: Mesh
 
     override fun onCreate() {
         super.onCreate()
 
-        mesh = MeshFactory.createMesh(vertices, indices)
+        quadRenderer = QuadRenderer()
+        quadRenderer.create()
     }
 
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
 
-        glBindVertexArray(mesh.vaoID)
-        glEnableVertexAttribArray(0)
-        GL11.glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, 0)
-        glDisableVertexAttribArray(0)
-        glBindVertexArray(0)
+        quadRenderer.begin()
+
+        quadRenderer.drawQuad(transform)
+
+        quadRenderer.end()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        quadRenderer.destroy()
     }
 
 }

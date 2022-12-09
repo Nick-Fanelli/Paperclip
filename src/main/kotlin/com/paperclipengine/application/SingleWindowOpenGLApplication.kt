@@ -1,6 +1,5 @@
 package com.paperclipengine.application
 
-import com.paperclipengine.graphics.MeshFactory
 import com.paperclipengine.scene.Scene
 import com.paperclipengine.scene.SceneManager
 
@@ -24,8 +23,6 @@ class SingleWindowOpenGLApplication(private val applicationName: String, private
 
     override fun onDestroy() {
         sceneManager.onDestroy()
-
-        MeshFactory.cleanUp()
 
         super.onDestroy()
     }
