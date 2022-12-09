@@ -1,5 +1,7 @@
-package com.paperclipengine.graphics
+package com.paperclipengine.graphics.render
 
+import com.paperclipengine.graphics.Shader
+import com.paperclipengine.graphics.Transform
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -8,7 +10,6 @@ import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL30.*
 import kotlin.math.cos
 import kotlin.math.sin
-
 
 private const val batchSpriteCount = 20000
 private const val batchVertexCount = batchSpriteCount * 4

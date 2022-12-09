@@ -1,4 +1,4 @@
-import com.paperclipengine.graphics.QuadRenderer
+import com.paperclipengine.graphics.render.QuadRenderer
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.scene.Scene
 import org.joml.Vector3f
