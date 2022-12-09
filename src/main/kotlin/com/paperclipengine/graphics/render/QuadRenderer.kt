@@ -2,6 +2,7 @@ package com.paperclipengine.graphics.render
 
 import com.paperclipengine.graphics.Shader
 import com.paperclipengine.graphics.Transform
+import com.paperclipengine.scene.Scene
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -33,7 +34,7 @@ private val quadVertexPositions = arrayOf(
     Vector2f(-0.5f, 0.5f)
 )
 
-class QuadRenderer {
+class QuadRenderer(override val parentScene: Scene) : Renderer(parentScene) {
 
     private lateinit var shader: Shader
 
@@ -46,7 +47,7 @@ class QuadRenderer {
     private var vboID = 0
     private var iboID = 0
 
-    fun create() {
+    override fun create() {
         shader = Shader("DefaultShader")
         shader.createShader()
 
@@ -130,16 +131,16 @@ class QuadRenderer {
         }
     }
 
-    fun begin() {
+    override fun begin() {
         vertexPtr = 0
     }
 
-    fun end() {
+    override fun end() {
         updateBatchVertexData()
         render()
     }
 
-    fun destroy() {
+    override fun destroy() {
         shader.destroy()
 
         glDeleteVertexArrays(vaoID)

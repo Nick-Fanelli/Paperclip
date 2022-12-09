@@ -14,7 +14,7 @@ class TestScene : Scene() {
     override fun onCreate() {
         super.onCreate()
 
-        quadRenderer = QuadRenderer()
+        quadRenderer = QuadRenderer(this)
         quadRenderer.create()
     }
 
