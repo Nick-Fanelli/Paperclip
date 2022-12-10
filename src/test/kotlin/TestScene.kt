@@ -1,10 +1,12 @@
 import com.paperclipengine.graphics.render.QuadRenderer
 import com.paperclipengine.graphics.Transform
+import com.paperclipengine.graphics.camera.OrthographicCamera
 import com.paperclipengine.scene.Scene
 import org.joml.Vector3f
 
 class TestScene : Scene() {
 
+    private lateinit var orthographicCamera: OrthographicCamera
     private lateinit var quadRenderer: QuadRenderer
 
     private val transform = Transform(
@@ -14,7 +16,9 @@ class TestScene : Scene() {
     override fun onCreate() {
         super.onCreate()
 
-        quadRenderer = QuadRenderer(this)
+        orthographicCamera = OrthographicCamera()
+
+        quadRenderer = QuadRenderer(this, orthographicCamera)
         quadRenderer.create()
     }
 
@@ -26,7 +30,6 @@ class TestScene : Scene() {
         quadRenderer.drawQuad(transform)
 
         quadRenderer.end()
-
     }
 
     override fun onDestroy() {

@@ -1,8 +1,12 @@
 package com.paperclipengine.graphics
 
 import com.paperclipengine.utils.InternalUtilities
+import org.joml.Matrix4f
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.system.MemoryUtil.NULL
+
+data class ShaderUniformLocation(val uniformLocationID: Int)
 
 class Shader(private val shaderName: String, private val replacements: HashMap<String, String> = HashMap()) {
 
@@ -72,6 +76,18 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
     fun destroy() {
         glUseProgram(0)
         glDeleteProgram(programID)
+    }
+
+    fun getUniformLocation(varName: String) : ShaderUniformLocation {
+        val location = glGetUniformLocation(programID, varName)
+        return ShaderUniformLocation(location)
+    }
+
+    fun addUniformMat4(uniformLocation: ShaderUniformLocation, matrix4f: Matrix4f) {
+        var floatBuffer = BufferUtils.createFloatBuffer(16)
+        floatBuffer = matrix4f.get(floatBuffer)
+
+        glUniformMatrix4fv(uniformLocation.uniformLocationID, false, floatBuffer)
     }
 
 }

@@ -1,7 +1,10 @@
 package com.paperclipengine.graphics.render
 
 import com.paperclipengine.graphics.Shader
+import com.paperclipengine.graphics.ShaderUniformLocation
 import com.paperclipengine.graphics.Transform
+import com.paperclipengine.graphics.camera.Camera
+import com.paperclipengine.graphics.camera.OrthographicCamera
 import com.paperclipengine.scene.Scene
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -34,7 +37,7 @@ private val quadVertexPositions = arrayOf(
     Vector2f(-0.5f, 0.5f)
 )
 
-class QuadRenderer(override val parentScene: Scene) : Renderer(parentScene) {
+class QuadRenderer(override val parentScene: Scene, private val camera: Camera) : Renderer(parentScene) {
 
     private lateinit var shader: Shader
 
@@ -47,9 +50,15 @@ class QuadRenderer(override val parentScene: Scene) : Renderer(parentScene) {
     private var vboID = 0
     private var iboID = 0
 
+    private lateinit var uniformProjectionLocation: ShaderUniformLocation
+    private lateinit var uniformViewLocation: ShaderUniformLocation
+
     override fun create() {
         shader = Shader("DefaultShader")
         shader.createShader()
+
+        uniformProjectionLocation = shader.getUniformLocation("uProjection")
+        uniformViewLocation = shader.getUniformLocation("uView")
 
         vertices = FloatArray(batchVertexCount * vertexFloatCount)
 
@@ -104,6 +113,9 @@ class QuadRenderer(override val parentScene: Scene) : Renderer(parentScene) {
 
     private fun render() {
         shader.bind()
+
+        shader.addUniformMat4(uniformProjectionLocation, camera.projectionMatrix)
+        shader.addUniformMat4(uniformViewLocation, camera.viewMatrix)
 
         glBindVertexArray(vaoID)
 
