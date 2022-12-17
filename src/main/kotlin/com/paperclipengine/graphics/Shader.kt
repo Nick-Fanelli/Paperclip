@@ -1,6 +1,6 @@
 package com.paperclipengine.graphics
 
-import com.paperclipengine.utils.InternalUtilities
+import com.paperclipengine.utils.FileUtils
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
@@ -17,8 +17,8 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
     fun createShader() {
         programID = glCreateProgram()
 
-        var vertShader: String = InternalUtilities.FileUtils.readResourceFileAsString("/shaders/$shaderName.vert.glsl")
-        var fragShader: String = InternalUtilities.FileUtils.readResourceFileAsString("/shaders/$shaderName.frag.glsl")
+        var vertShader: String = FileUtils.readResourceFileAsString("/shaders/$shaderName.vert.glsl")
+        var fragShader: String = FileUtils.readResourceFileAsString("/shaders/$shaderName.frag.glsl")
 
         for(entry in replacements.entries) {
             vertShader = vertShader.replace(entry.key.toRegex(), entry.value)

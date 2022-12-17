@@ -30,7 +30,7 @@ class SceneManager() {
 
     fun onUpdate(deltaTime: Float) {
         currentScene?.onUpdate(deltaTime)
-        currentScene?.onRender()
+        input.update()
     }
 
     fun onDestroy() {

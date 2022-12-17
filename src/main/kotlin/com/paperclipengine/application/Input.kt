@@ -153,11 +153,13 @@ class Input() {
     private var mouseButtons        = BooleanArray(NUM_MOUSE_BUTTONS)
     private var mouseButtonsLast    = BooleanArray(NUM_MOUSE_BUTTONS)
 
-    private var mousePosition       = Vector2f()
+    var mousePosition       = Vector2f()
+        private set
     private var mousePositionLast   = Vector2f()
 
+    var scrollPosition      = Vector2f()
+        private set
     private var absScrollPosition   = Vector2f()
-    private var scrollPosition      = Vector2f()
 
     fun bindCallbacks(windowPtr: Long) {
         glfwSetKeyCallback(windowPtr, ::keyCallback)
@@ -178,7 +180,7 @@ class Input() {
         if(key == KEY_ESCAPE && action == GLFW_RELEASE)
             glfwSetWindowShouldClose(window, true)
 
-        if(key <= NUM_KEYS)
+        if(key in 0..NUM_KEYS)
             keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT)
     }
 

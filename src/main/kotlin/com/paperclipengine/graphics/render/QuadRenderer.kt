@@ -4,7 +4,6 @@ import com.paperclipengine.graphics.Shader
 import com.paperclipengine.graphics.ShaderUniformLocation
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.graphics.camera.Camera
-import com.paperclipengine.graphics.camera.OrthographicCamera
 import com.paperclipengine.scene.Scene
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -40,7 +39,6 @@ private val quadVertexPositions = arrayOf(
 class QuadRenderer(override val parentScene: Scene, private val camera: Camera) : Renderer(parentScene) {
 
     private lateinit var shader: Shader
-
     private lateinit var vertices: FloatArray
 
     private var vertexPtr = 0

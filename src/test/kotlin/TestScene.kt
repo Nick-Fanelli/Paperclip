@@ -1,41 +1,40 @@
-import com.paperclipengine.graphics.render.QuadRenderer
+import com.paperclipengine.application.Input
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.graphics.camera.OrthographicCamera
+import com.paperclipengine.graphics.render.QuadRenderer
+import com.paperclipengine.scene.GameScene
 import com.paperclipengine.scene.Scene
 import org.joml.Vector3f
+import org.joml.Vector4f
 
-class TestScene : Scene() {
+class TestScene : GameScene() {
 
-    private lateinit var orthographicCamera: OrthographicCamera
-    private lateinit var quadRenderer: QuadRenderer
-
-    private val transform = Transform(
-        Vector3f(0.0f, 0.0f, 0.0f)
-    )
-
-    override fun onCreate() {
-        super.onCreate()
-
-        orthographicCamera = OrthographicCamera()
-
-        quadRenderer = QuadRenderer(this, orthographicCamera)
-        quadRenderer.create()
-    }
+    private val cameraSpeed = 2.0f
 
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
 
-        quadRenderer.begin()
+        if(input.isKey(Input.KEY_D)) {
+            camera.position.x += deltaTime * cameraSpeed
+        }
 
-        quadRenderer.drawQuad(transform)
+        if(input.isKey(Input.KEY_A)) {
+            camera.position.x -= deltaTime * cameraSpeed
+        }
 
-        quadRenderer.end()
-    }
+        if(input.isKey(Input.KEY_S)) {
+            camera.position.y -= deltaTime * cameraSpeed
+        }
 
-    override fun onDestroy() {
-        super.onDestroy()
+        if(input.isKey(Input.KEY_W)) {
+            camera.position.y += deltaTime * cameraSpeed
+        }
 
-        quadRenderer.destroy()
+        if(input.scrollPosition.y != 0f) {
+            camera.zoom -= deltaTime * input.scrollPosition.y * cameraSpeed
+        }
+
+        super.onRender()
     }
 
 }

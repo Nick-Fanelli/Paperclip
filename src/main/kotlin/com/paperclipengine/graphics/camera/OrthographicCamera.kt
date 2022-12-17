@@ -1,9 +1,13 @@
 package com.paperclipengine.graphics.camera
 
-import org.joml.Matrix4f
-import org.joml.Vector3f
-
 class OrthographicCamera : Camera() {
+
+    var zoom: Float = 1.0f
+        set(value) {
+            field = value
+
+            calculateViewMatrix()
+        }
 
     init {
         calculateProjectionMatrix()
@@ -17,7 +21,8 @@ class OrthographicCamera : Camera() {
 
     override fun calculateViewMatrix() {
         viewMatrix.identity()
-        viewMatrix.translate(position).invert()
+        viewMatrix.translate(position.x, position.y, position.z).invert()
+        viewMatrix.scale(zoom, zoom, zoom)
     }
 
 }
