@@ -3,6 +3,7 @@ package com.paperclipengine.application
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFWWindowSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GLCapabilities
@@ -89,11 +90,14 @@ class Display(private val windowTitle: String, private var displayPreferences: D
     var fps = 0
         private set
 
-    private lateinit var updateCallback: (_: Float) -> Any
+    var aspectRatio = 0.0f
         private set
 
+    private lateinit var updateCallback: (_: Float) -> Any
+
+    var windowResizeCallback: ((_: Float) -> Any)? = null
+
     private lateinit var glCapabilities: GLCapabilities
-        private set
 
     private var endTime = 0.0f
     private var startTime = 0.0f
@@ -120,6 +124,8 @@ class Display(private val windowTitle: String, private var displayPreferences: D
             if(displayPreferences.displayName == null) windowTitle else displayPreferences.displayName!! , NULL, NULL)
         if (windowPtr == NULL) throw RuntimeException("Failed to create the GLFW window")
 
+        aspectRatio = displayPreferences.displaySize.width.toFloat() / displayPreferences.displaySize.height.toFloat()
+
         // Get the thread stack and push a new frame
         stackPush().use { stack ->
             val pWidth = stack.mallocInt(1) // int*
@@ -144,6 +150,16 @@ class Display(private val windowTitle: String, private var displayPreferences: D
 
         // Enable v-sync
         glfwSwapInterval(if(displayPreferences.isVsyncEnabled) 1 else 0)
+
+        glfwSetWindowSizeCallback(windowPtr, object : GLFWWindowSizeCallback() {
+            override operator fun invoke(window: Long, width: Int, height: Int) {
+                aspectRatio = width.toFloat() / height.toFloat()
+                glViewport(0, 0, width, height)
+
+                windowResizeCallback?.let { it(aspectRatio) }
+
+            }
+        })
 
         // Make the window visible
         glfwShowWindow(windowPtr)

@@ -14,7 +14,13 @@ class SingleWindowOpenGLApplication(private val applicationName: String, private
         if(startingScene != null)
             sceneManager.setScene(startingScene)
 
+        display.windowResizeCallback = ::windowResize
+
         super.startApplication()
+    }
+
+    private fun windowResize(aspectRatio: Float) {
+        sceneManager.onWindowResize(aspectRatio)
     }
 
     override fun onUpdate(deltaTime: Float) {

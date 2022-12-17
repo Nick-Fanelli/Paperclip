@@ -39,4 +39,8 @@ open class GameScene : Scene() {
         quadRenderer.destroy()
     }
 
+    override fun onWindowResize(aspectRatio: Float) {
+        camera.aspectRatio = aspectRatio
+    }
+
 }

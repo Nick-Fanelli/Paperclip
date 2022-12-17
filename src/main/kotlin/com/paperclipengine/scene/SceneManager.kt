@@ -33,6 +33,10 @@ class SceneManager() {
         input.update()
     }
 
+    internal fun onWindowResize(aspectRatio: Float) {
+        currentScene?.onWindowResize(aspectRatio)
+    }
+
     fun onDestroy() {
         currentScene?.onDestroy()
     }
