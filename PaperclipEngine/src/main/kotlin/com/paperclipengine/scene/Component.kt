@@ -1,7 +1,6 @@
 package com.paperclipengine.scene
 
 import com.paperclipengine.graphics.Transform
-import kotlin.reflect.KClass
 
 abstract class Component(val isMultipleInstancesPerEntityAllowed: Boolean)
 

@@ -1,3 +1,4 @@
 
-rootProject.name = "PaperclipEngine"
-
+rootProject.name = "Paperclip"
+include("PaperclipEngine")
+include("Samples")

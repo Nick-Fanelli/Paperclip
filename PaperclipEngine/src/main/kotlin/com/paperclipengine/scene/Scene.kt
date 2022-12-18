@@ -5,8 +5,8 @@ import com.paperclipengine.application.SingleWindowOpenGLApplication
 
 abstract class Scene {
 
-    internal lateinit var input: Input
-    internal lateinit var application: SingleWindowOpenGLApplication
+    lateinit var input: Input
+    lateinit var application: SingleWindowOpenGLApplication
 
     open fun onCreate() {}
     open fun onUpdate(deltaTime: Float) {}

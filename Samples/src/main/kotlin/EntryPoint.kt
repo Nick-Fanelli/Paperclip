@@ -1,5 +1,4 @@
 import com.paperclipengine.application.SingleWindowOpenGLApplication
-import com.paperclipengine.scene.GameScene
 
 fun main() {
     EntryPoint().run()
