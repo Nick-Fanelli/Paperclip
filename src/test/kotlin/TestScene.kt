@@ -1,9 +1,39 @@
 import com.paperclipengine.application.Input
+import com.paperclipengine.scene.EntityComponentSystem
 import com.paperclipengine.scene.GameScene
+import com.paperclipengine.scene.TransformComponent
 
 class TestScene : GameScene() {
 
     private val cameraSpeed = 2.0f
+
+    override fun onCreate() {
+        super.onCreate()
+
+        val ecs = EntityComponentSystem()
+
+        val entity = ecs.createEntity()
+        entity.addComponent(TransformComponent())
+        println(entity.getComponent(TransformComponent::class))
+
+
+//
+//        val entity2 = ecs.createEntity()
+//        val entity3 = ecs.createEntity()
+//        val entity4 = ecs.createEntity()
+//        val entity5 = ecs.createEntity()
+//
+////        println("$entity1 !$entity2 $entity3 !$entity4 $entity5")
+//
+//        ecs.destroyEntity(entity2)
+//        ecs.destroyEntity(entity4)
+//
+//        val entity6 = ecs.createEntity()
+//        val entity7 = ecs.createEntity()
+
+//        println("$entity6 $entity7")
+
+    }
 
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
