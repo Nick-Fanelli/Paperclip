@@ -1,8 +1,9 @@
 package com.paperclipengine.scene
 
 import com.paperclipengine.application.Input
+import com.paperclipengine.application.SingleWindowOpenGLApplication
 
-class SceneManager() {
+class SceneManager(val application: SingleWindowOpenGLApplication) {
 
     private var input = Input()
 
@@ -23,6 +24,7 @@ class SceneManager() {
         val instantiatedScene: T = constructor()
 
         instantiatedScene.input = this.input
+        instantiatedScene.application = this.application
         instantiatedScene.onCreate()
 
         currentScene = instantiatedScene

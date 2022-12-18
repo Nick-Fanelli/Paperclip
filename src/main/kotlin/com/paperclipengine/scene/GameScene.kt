@@ -1,6 +1,5 @@
 package com.paperclipengine.scene
 
-import com.paperclipengine.application.Input
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.graphics.camera.OrthographicCamera
 import com.paperclipengine.graphics.render.QuadRenderer
@@ -26,7 +25,12 @@ open class GameScene : Scene() {
         quadRenderer.begin()
 
         quadRenderer.drawQuad(Transform(
-            Vector3f(0.0f, 0.0f, 0.0f),
+            Vector3f(1.0f, 0.0f, 0.0f),
+        ), Vector4f(1.0f)
+        )
+
+        quadRenderer.drawQuad(Transform(
+            Vector3f(-1f, 0.0f, 0.0f),
         ), Vector4f(1.0f)
         )
 

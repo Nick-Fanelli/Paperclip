@@ -177,9 +177,6 @@ class Input() {
     }
 
     private fun keyCallback(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        if(key == KEY_ESCAPE && action == GLFW_RELEASE)
-            glfwSetWindowShouldClose(window, true)
-
         if(key in 0..NUM_KEYS)
             keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT)
     }

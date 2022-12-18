@@ -195,6 +195,10 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         frameCount++
     }
 
+    fun closeDisplay() {
+        glfwSetWindowShouldClose(windowPtr, true)
+    }
+
     fun cleanUp() {
         glfwFreeCallbacks(windowPtr)
         glfwDestroyWindow(windowPtr)

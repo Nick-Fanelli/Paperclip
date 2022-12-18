@@ -135,7 +135,7 @@ class QuadRenderer(override val parentScene: Scene, private val camera: Camera) 
     }
 
     private fun allocateQuad() {
-        if(vertexPtr + (vertexFloatCount * 4) >= vertices.size) { // TODO: Test by setting quad count to 1
+        if(vertexPtr + (vertexFloatCount * 4) >= vertices.size) {
             end()
             begin()
         }

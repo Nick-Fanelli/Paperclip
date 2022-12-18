@@ -8,7 +8,7 @@ class SingleWindowOpenGLApplication(private val applicationName: String, private
     private lateinit var sceneManager: SceneManager
 
     override fun startApplication() {
-        sceneManager = SceneManager()
+        sceneManager = SceneManager(this)
         sceneManager.createInput(display.windowPtr)
 
         if(startingScene != null)
@@ -17,6 +17,10 @@ class SingleWindowOpenGLApplication(private val applicationName: String, private
         display.windowResizeCallback = ::windowResize
 
         super.startApplication()
+    }
+
+    fun endApplication() {
+        display.closeDisplay()
     }
 
     private fun windowResize(aspectRatio: Float) {
