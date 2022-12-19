@@ -1,7 +1,18 @@
 import com.paperclipengine.application.Input
+import com.paperclipengine.scene.Entity
 import com.paperclipengine.scene.EntityComponentSystem
 import com.paperclipengine.scene.GameScene
 import com.paperclipengine.scene.TransformComponent
+
+private class Player(val ecs: EntityComponentSystem) {
+
+    val entity: Entity = ecs.createEntity()
+
+    init {
+        entity.addComponent(TransformComponent())
+    }
+
+}
 
 class TestScene : GameScene() {
 
@@ -12,11 +23,12 @@ class TestScene : GameScene() {
 
         val ecs = EntityComponentSystem()
 
-        val entity = ecs.createEntity()
-        entity.addComponent(TransformComponent())
-        println(entity.getComponent(TransformComponent::class))
+        for(i in 0..5) {
+            val player = Player(ecs)
+            ecs.destroyEntity(player.entity)
+        }
 
-
+        println(ecs.getAllComponentsByType<TransformComponent>())
 //
 //        val entity2 = ecs.createEntity()
 //        val entity3 = ecs.createEntity()

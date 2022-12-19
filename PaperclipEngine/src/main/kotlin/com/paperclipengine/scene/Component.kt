@@ -2,6 +2,6 @@ package com.paperclipengine.scene
 
 import com.paperclipengine.graphics.Transform
 
-abstract class Component(val isMultipleInstancesPerEntityAllowed: Boolean)
+abstract class Component()
 
-data class TransformComponent(val transform: Transform = Transform()) : Component(false)
+data class TransformComponent(val transform: Transform = Transform()) : Component()
