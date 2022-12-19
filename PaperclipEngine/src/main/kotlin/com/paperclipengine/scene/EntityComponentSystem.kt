@@ -4,15 +4,17 @@ import kotlin.reflect.KClass
 
 data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
 
-    fun <ComponentType: Component> addComponent(component: ComponentType) : ComponentType = entityComponentSystem.addComponent(entityID, component)
-    inline fun <reified ComponentType: Component> getComponent() : ComponentType? = entityComponentSystem.getComponent(entityID)
-    inline fun <reified ComponentType: Component> removeComponent() = entityComponentSystem.removeComponent<ComponentType>(entityID)
+    fun <T: Component> addComponent(component: T) : T = entityComponentSystem.addComponent(entityID, component)
+    inline fun <reified T: Component> getComponent() : T? = entityComponentSystem.getComponent(entityID)
+    inline fun <reified T: Component> removeComponent() = entityComponentSystem.removeComponent<T>(entityID)
 
     override fun toString(): String {
         return "Entity(entityID=$entityID)"
     }
 
 }
+
+data class ComponentPair<T: Component, V: Component>(val first: T, val second: V)
 
 class EntityComponentSystem {
 
@@ -42,7 +44,7 @@ class EntityComponentSystem {
         erasedEntityIDs.add(entity.entityID)
     }
 
-    fun <ComponentType: Component> addComponent(entityID: Int, component: ComponentType) : ComponentType {
+    fun <T: Component> addComponent(entityID: Int, component: T) : T {
         if(components[component::class] == null) {
             components[component::class] = HashMap()
         }
@@ -51,34 +53,56 @@ class EntityComponentSystem {
             throw RuntimeException("Only allowed to have one instance")
 
         components[component::class]?.put(entityID, component)
-        return components[component::class]!![entityID] as ComponentType
+        return components[component::class]!![entityID] as T
     }
 
-    inline fun <reified ComponentType: Component> getComponent(entityID: Int) : ComponentType? {
-        if(components[ComponentType::class] == null)
+    inline fun <reified T: Component> getComponent(entityID: Int) : T? {
+        if(components[T::class] == null)
             return null
 
-        if(!components[ComponentType::class]!!.containsKey(entityID))
+        if(!components[T::class]!!.containsKey(entityID))
             return null
 
-        return components[ComponentType::class]!![entityID] as ComponentType
+        return components[T::class]!![entityID] as T
     }
 
-    inline fun <reified ComponentType: Component> removeComponent(entityID: Int) {
-        if(components[ComponentType::class] == null)
+    inline fun <reified T: Component> removeComponent(entityID: Int) {
+        if(components[T::class] == null)
             throw RuntimeException("Invalid Component Type")
 
-        if(!components[ComponentType::class]!!.containsKey(entityID))
+        if(!components[T::class]!!.containsKey(entityID))
             throw RuntimeException("Entity does not contain that component")
 
-        components[ComponentType::class]!!.remove(entityID)
+        components[T::class]!!.remove(entityID)
     }
 
-    inline fun <reified ComponentType: Component> getAllComponentsByType() : List<ComponentType> {
-        if(components[ComponentType::class] == null)
+    inline fun <reified T: Component> getAllComponentsByType() : List<T> {
+        if(components[T::class] == null)
             return emptyList()
 
-        return components[ComponentType::class]!!.values.toList() as List<ComponentType>
+        return components[T::class]!!.values.toList() as List<T>
+    }
+
+    inline fun <reified T: Component, reified V: Component> forEachComponentByType(secondType: KClass<V>, callback: (ComponentPair<T, V>) -> Unit) {
+
+        if(components[T::class] == null || components[V::class] == null)
+            return
+
+        components[T::class]!!.forEach {
+            callback(ComponentPair(it.value as T, components[V::class]!![it.key] as V))
+        }
+
+    }
+
+    inline fun <reified T: Component, reified V: Component> getAllComponentsByType(secondType: KClass<V>) : ArrayList<ComponentPair<T, V>> {
+
+        val results = ArrayList<ComponentPair<T, V>>()
+
+        forEachComponentByType(secondType) {
+            results.add(it)
+        }
+
+        return results
     }
 
     fun getAllComponentsOfEntity(entityID: Int) : ArrayList<Component> {

@@ -13,5 +13,4 @@ abstract class Scene {
     open fun onDestroy() {}
 
     open fun onWindowResize(aspectRatio: Float) {}
-
 }

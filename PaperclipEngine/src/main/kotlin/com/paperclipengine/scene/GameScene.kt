@@ -10,7 +10,11 @@ open class GameScene : Scene() {
 
     protected lateinit var camera: OrthographicCamera
 
+    private val entityComponentSystem = EntityComponentSystem()
+
     private lateinit var quadRenderer: QuadRenderer
+    fun createEntity() : Entity = entityComponentSystem.createEntity()
+    fun destroyEntity(entity: Entity) = entityComponentSystem.destroyEntity(entity)
 
     override fun onCreate() {
         super.onCreate()
@@ -24,15 +28,9 @@ open class GameScene : Scene() {
     protected fun onRender() {
         quadRenderer.begin()
 
-        quadRenderer.drawQuad(Transform(
-            Vector3f(1.0f, 0.0f, 0.0f),
-        ), Vector4f(1.0f)
-        )
-
-        quadRenderer.drawQuad(Transform(
-            Vector3f(-1f, 0.0f, 0.0f),
-        ), Vector4f(1.0f)
-        )
+        entityComponentSystem.forEachComponentByType<QuadRendererComponent, TransformComponent>(TransformComponent::class) {
+            quadRenderer.drawQuad(it.second.transform, it.first.color)
+        }
 
         quadRenderer.end()
     }

@@ -1,18 +1,8 @@
 import com.paperclipengine.application.Input
-import com.paperclipengine.scene.Entity
-import com.paperclipengine.scene.EntityComponentSystem
-import com.paperclipengine.scene.GameScene
-import com.paperclipengine.scene.TransformComponent
-
-private class Player(val ecs: EntityComponentSystem) {
-
-    val entity: Entity = ecs.createEntity()
-
-    init {
-        entity.addComponent(TransformComponent())
-    }
-
-}
+import com.paperclipengine.graphics.Transform
+import com.paperclipengine.scene.*
+import org.joml.Vector3f
+import org.joml.Vector4f
 
 class TestScene : GameScene() {
 
@@ -21,29 +11,6 @@ class TestScene : GameScene() {
     override fun onCreate() {
         super.onCreate()
 
-        val ecs = EntityComponentSystem()
-
-        for(i in 0..5) {
-            val player = Player(ecs)
-            ecs.destroyEntity(player.entity)
-        }
-
-        println(ecs.getAllComponentsByType<TransformComponent>())
-//
-//        val entity2 = ecs.createEntity()
-//        val entity3 = ecs.createEntity()
-//        val entity4 = ecs.createEntity()
-//        val entity5 = ecs.createEntity()
-//
-////        println("$entity1 !$entity2 $entity3 !$entity4 $entity5")
-//
-//        ecs.destroyEntity(entity2)
-//        ecs.destroyEntity(entity4)
-//
-//        val entity6 = ecs.createEntity()
-//        val entity7 = ecs.createEntity()
-
-//        println("$entity6 $entity7")
 
     }
 
@@ -67,7 +34,8 @@ class TestScene : GameScene() {
         }
 
         if(input.scrollPosition.y != 0f) {
-            camera.zoom -= deltaTime * input.scrollPosition.y * cameraSpeed
+            camera.zoom -= deltaTime * input.scrollPosition.y
+            if(camera.zoom < 0f) camera.zoom = 0f
         }
 
         if(input.isKey(Input.KEY_ESCAPE)) {
