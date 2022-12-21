@@ -1,5 +1,6 @@
 import com.paperclipengine.application.Input
 import com.paperclipengine.graphics.Transform
+import com.paperclipengine.physics2d.Rigidbody2D
 import com.paperclipengine.scene.*
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -11,6 +12,12 @@ class TestScene : GameScene() {
     override fun onCreate() {
         super.onCreate()
 
+        val entity = createEntity()
+        entity.addComponent(TransformComponent(Transform(Vector3f(), Vector3f(0.1f, 0.1f, 0.1f))))
+        entity.addComponent(QuadRendererComponent())
+        val rigidbody2D = entity.addComponent(Rigidbody2D())
+
+        rigidbody2D.velocity.y = -9.8f
 
     }
 

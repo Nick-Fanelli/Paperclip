@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 
 data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
 
-    fun <T: Component> addComponent(component: T) : T = entityComponentSystem.addComponent(entityID, component)
+    inline fun <reified T: Component> addComponent(component: T) : T = entityComponentSystem.addComponent(entityID, component)
     inline fun <reified T: Component> getComponent() : T? = entityComponentSystem.getComponent(entityID)
     inline fun <reified T: Component> removeComponent() = entityComponentSystem.removeComponent<T>(entityID)
 
@@ -22,6 +22,7 @@ class EntityComponentSystem {
     private val erasedEntityIDs: ArrayList<Int> = ArrayList()
 
     val components: HashMap<KClass<*>, HashMap<Int, Component>> = HashMap()
+    val callbacks: HashMap<KClass<*>, ArrayList<() -> Unit>> = HashMap()
 
     private fun generateNewEntityID() : Int {
         if(erasedEntityIDs.size > 0) {
@@ -44,7 +45,27 @@ class EntityComponentSystem {
         erasedEntityIDs.add(entity.entityID)
     }
 
-    fun <T: Component> addComponent(entityID: Int, component: T) : T {
+    inline fun <reified T: Component> addComponentTypeListener(noinline callback: () -> Unit) {
+        if(callbacks[T::class] == null)
+            callbacks[T::class] = ArrayList()
+
+        callbacks[T::class]!!.add(callback)
+    }
+
+    inline fun <reified T: Component> removeComponentTypeListener(noinline callback: () -> Unit) : Boolean {
+        if(callbacks[T::class] == null)
+            return false
+
+        return callbacks[T::class]!!.remove(callback)
+    }
+
+    inline fun <reified T: Component> callComponentTypeListener() {
+        callbacks[T::class]?.forEach() {
+            it()
+        }
+    }
+
+    inline fun <reified T: Component> addComponent(entityID: Int, component: T) : T {
         if(components[component::class] == null) {
             components[component::class] = HashMap()
         }
@@ -53,6 +74,7 @@ class EntityComponentSystem {
             throw RuntimeException("Only allowed to have one instance")
 
         components[component::class]?.put(entityID, component)
+        callComponentTypeListener<T>()
         return components[component::class]!![entityID] as T
     }
 
@@ -74,6 +96,8 @@ class EntityComponentSystem {
             throw RuntimeException("Entity does not contain that component")
 
         components[T::class]!!.remove(entityID)
+
+        callComponentTypeListener<T>()
     }
 
     inline fun <reified T: Component> getAllComponentsByType() : List<T> {
@@ -89,7 +113,8 @@ class EntityComponentSystem {
             return
 
         components[T::class]!!.forEach {
-            callback(ComponentPair(it.value as T, components[V::class]!![it.key] as V))
+            if(components[V::class]!![it.key] != null)
+                callback(ComponentPair(it.value as T, components[V::class]!![it.key] as V))
         }
 
     }
