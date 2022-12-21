@@ -9,7 +9,7 @@ data class PhysicsComponentData(val transformComponent: TransformComponent, val 
 
 class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
 
-    var gravity = Vector2f(0.0f, -9.8f)
+    var gravity = Vector2f(0f, -9.8f)
 
     private val physicsTimeStep = 1.0f / 60.0f
 
@@ -44,10 +44,65 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
     }
 
     private fun updateEntity(entity: PhysicsComponentData) {
+        applyConstraints(entity)
+        solveCollisions(entity)
+        calculatePosition(entity)
+    }
 
-        // Update the position of the entity by its velocity
-        val scaledVelocity = Vector3f(entity.rigidbody2D.velocity.x, entity.rigidbody2D.velocity.y, 0.0f).mul(physicsTimeStep)
-        entity.transformComponent.transform.position.add(scaledVelocity)
+    private fun calculatePosition(entity: PhysicsComponentData) {
+        if(entity.rigidbody2D.hasGravity)
+            entity.rigidbody2D.applyForce(gravity)
+
+        val velocity = Vector2f(entity.transformComponent.transform.position.x - entity.rigidbody2D.previousPosition.x,
+            entity.transformComponent.transform.position.y - entity.rigidbody2D.previousPosition.y)
+
+        entity.rigidbody2D.previousPosition = Vector2f(entity.transformComponent.transform.position.x, entity.transformComponent.transform.position.y)
+
+        entity.transformComponent.transform.position.add(Vector3f(velocity.x + entity.rigidbody2D.acceleration.x * physicsTimeStep * physicsTimeStep,
+            velocity.y + entity.rigidbody2D.acceleration.y * physicsTimeStep * physicsTimeStep, 0.0f))
+
+        entity.rigidbody2D.zeroAcceleration()
+    }
+
+    private val position = Vector2f(0f, 0f)
+    private val radius = 1.0f
+
+    private fun applyConstraints(entity: PhysicsComponentData) {
+        val toObj = Vector2f(entity.transformComponent.transform.position.x, entity.transformComponent.transform.position.y).sub(position)
+        val distance = Vector2f.distance(entity.transformComponent.transform.position.x, entity.transformComponent.transform.position.y, position.x, position.y)
+
+        if(distance > radius - 0.1f) {
+            val n = Vector2f(toObj).div(distance)
+            n.mul(radius - 0.1f)
+            entity.transformComponent.transform.position.set(n.x, n.y, 0.0f)
+        }
+    }
+
+    private val correction = 0.3f
+
+    private fun solveCollisions(entity: PhysicsComponentData) {
+
+        physicsComponentData.forEach {
+            if(it != entity) {
+
+                val collisionAxis = Vector2f(
+                    entity.transformComponent.transform.position.x,
+                    entity.transformComponent.transform.position.y
+                )
+                    .sub(it.transformComponent.transform.position.x, it.transformComponent.transform.position.y)
+
+                val distance = Vector2f.length(collisionAxis.x, collisionAxis.y)
+
+                if (distance < 0.1f) { // TODO: use calculated physics nodes
+
+                    val n = collisionAxis.div(distance)
+                    val delta = 0.1f - distance
+                    entity.transformComponent.transform.position.add(correction * delta * n.x, correction * delta * n.y, 0f)
+                    it.transformComponent.transform.position.sub(correction * delta * n.x, correction * delta * n.y, 0f)
+                }
+            }
+        }
+
     }
 
 }

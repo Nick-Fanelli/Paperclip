@@ -11,18 +11,17 @@ class TestScene : GameScene() {
 
     override fun onCreate() {
         super.onCreate()
-
-        val entity = createEntity()
-        entity.addComponent(TransformComponent(Transform(Vector3f(), Vector3f(0.1f, 0.1f, 0.1f))))
-        entity.addComponent(QuadRendererComponent())
-        val rigidbody2D = entity.addComponent(Rigidbody2D())
-
-        rigidbody2D.velocity.y = -9.8f
-
     }
 
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
+
+        if(input.isKeyDown(Input.KEY_SPACE)) {
+            val entity = createEntity()
+            entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.1f, 0.1f, 0.1f))))
+            entity.addComponent(QuadRendererComponent())
+            entity.addComponent(Rigidbody2D())
+        }
 
         if(input.isKey(Input.KEY_D)) {
             camera.position.x += deltaTime * cameraSpeed

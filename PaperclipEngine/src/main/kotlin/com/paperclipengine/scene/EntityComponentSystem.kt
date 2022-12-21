@@ -75,6 +75,7 @@ class EntityComponentSystem {
 
         components[component::class]?.put(entityID, component)
         callComponentTypeListener<T>()
+        components[component::class]!![entityID]!!.onAttach(this, entityID)
         return components[component::class]!![entityID] as T
     }
 

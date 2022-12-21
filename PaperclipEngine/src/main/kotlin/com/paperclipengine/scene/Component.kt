@@ -4,7 +4,9 @@ import com.paperclipengine.graphics.Transform
 import org.joml.Vector2f
 import org.joml.Vector4f
 
-abstract class Component()
+abstract class Component() {
+    open fun onAttach(ecs: EntityComponentSystem, entityID: Int) {}
+}
 
 data class TransformComponent(val transform: Transform = Transform()) : Component()
 
