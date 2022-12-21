@@ -10,7 +10,7 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
-import org.lwjgl.opengl.GL30.*
+import org.lwjgl.opengl.GL30
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -26,7 +26,11 @@ private const val colorFloatCount = 4 // r, g, b, a
 private const val colorByteCount = colorFloatCount * Float.SIZE_BYTES
 private const val colorOffsetBytes = positionOffsetBytes + positionByteCount
 
-private const val vertexFloatCount = positionFloatCount + colorFloatCount
+private const val uvCoordsFloatCount = 2
+private const val uvCoordsByteCount = uvCoordsFloatCount * Float.SIZE_BYTES
+private const val uvCoordsOffsetBytes = colorOffsetBytes + colorByteCount
+
+private const val vertexFloatCount = positionFloatCount + colorFloatCount + uvCoordsFloatCount
 private const val vertexByteCount = vertexFloatCount * Float.SIZE_BYTES
 
 private val quadVertexPositions = arrayOf(
@@ -36,7 +40,7 @@ private val quadVertexPositions = arrayOf(
     Vector2f(-0.5f, 0.5f)
 )
 
-open class QuadRenderer(override val parentScene: Scene, private val camera: Camera) : Renderer(parentScene) {
+class CircleRenderer(override val parentScene: Scene, private val camera: Camera) : Renderer(parentScene) {
 
     private lateinit var shader: Shader
     private lateinit var vertices: FloatArray
@@ -52,7 +56,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     private lateinit var uniformViewLocation: ShaderUniformLocation
 
     override fun create() {
-        shader = Shader("DefaultShader")
+        shader = Shader("CircleShader")
         shader.createShader()
 
         uniformProjectionLocation = shader.getUniformLocation("uProjection")
@@ -60,18 +64,26 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
         vertices = FloatArray(batchVertexCount * vertexFloatCount)
 
-        vaoID = glGenVertexArrays()
-        glBindVertexArray(vaoID)
+        vaoID = GL30.glGenVertexArrays()
+        GL30.glBindVertexArray(vaoID)
 
-        vboID = glGenBuffers()
-        glBindBuffer(GL_ARRAY_BUFFER, vboID)
+        vboID = GL30.glGenBuffers()
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboID)
 
-        glBufferData(GL_ARRAY_BUFFER, (vertexByteCount * batchVertexCount).toLong(), GL_DYNAMIC_DRAW)
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, (vertexByteCount * batchVertexCount).toLong(), GL30.GL_DYNAMIC_DRAW)
 
-        glVertexAttribPointer(0, positionFloatCount, GL_FLOAT, false, vertexByteCount, positionOffsetBytes.toLong())
-        glVertexAttribPointer(1, colorFloatCount, GL_FLOAT, false, vertexByteCount, colorOffsetBytes.toLong())
+        GL30.glVertexAttribPointer(
+            0,
+            positionFloatCount,
+            GL30.GL_FLOAT,
+            false,
+            vertexByteCount,
+            positionOffsetBytes.toLong()
+        )
+        GL30.glVertexAttribPointer(1, colorFloatCount, GL30.GL_FLOAT, false, vertexByteCount, colorOffsetBytes.toLong())
+        GL30.glVertexAttribPointer(2, uvCoordsFloatCount, GL30.GL_FLOAT, false, vertexByteCount, uvCoordsOffsetBytes.toLong())
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0)
 
         val indices = IntArray(batchIndexCount)
         var offset = 0
@@ -94,19 +106,19 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         }
 
         // Bind the indices
-        iboID = glGenBuffers()
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
+        iboID = GL30.glGenBuffers()
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboID)
+        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, indices, GL30.GL_STATIC_DRAW)
 
         // Unbind
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
-        glBindVertexArray(0)
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, 0)
+        GL30.glBindVertexArray(0)
     }
 
     private fun updateBatchVertexData() {
-        glBindBuffer(GL_ARRAY_BUFFER, vboID)
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboID)
+        GL30.glBufferSubData(GL30.GL_ARRAY_BUFFER, 0, vertices)
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0)
     }
 
     private fun render() {
@@ -115,23 +127,25 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         shader.addUniformMat4(uniformProjectionLocation, camera.projectionMatrix)
         shader.addUniformMat4(uniformViewLocation, camera.viewMatrix)
 
-        glBindVertexArray(vaoID)
+        GL30.glBindVertexArray(vaoID)
 
-        glEnableVertexAttribArray(0)
-        glEnableVertexAttribArray(1)
+        GL30.glEnableVertexAttribArray(0)
+        GL30.glEnableVertexAttribArray(1)
+        GL30.glEnableVertexAttribArray(2)
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID)
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboID)
 
-        GL11.glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0)
+        GL11.glDrawElements(GL30.GL_TRIANGLES, indexCount, GL30.GL_UNSIGNED_INT, 0)
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, 0)
 
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
+        GL30.glDisableVertexAttribArray(0)
+        GL30.glDisableVertexAttribArray(1)
+        GL30.glDisableVertexAttribArray(2)
 
-        glBindVertexArray(0)
+        GL30.glBindVertexArray(0)
 
-        glUseProgram(0)
+        GL30.glUseProgram(0)
     }
 
     private fun allocateQuad() {
@@ -153,12 +167,12 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     override fun destroy() {
         shader.destroy()
 
-        glDeleteVertexArrays(vaoID)
+        GL30.glDeleteVertexArrays(vaoID)
         GL15.glDeleteBuffers(vboID)
         GL15.glDeleteBuffers(iboID)
     }
 
-    private fun addVertex(position: Vector3f, color: Vector4f) {
+    private fun addVertex(position: Vector3f, color: Vector4f, uvCoords: Vector2f) {
         // Position
         vertices[vertexPtr + 0] = position.x
         vertices[vertexPtr + 1] = position.y
@@ -170,10 +184,14 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         vertices[vertexPtr + 5] = color.z
         vertices[vertexPtr + 6] = color.w
 
+        // UV Coords
+        vertices[vertexPtr + 7] = uvCoords.x
+        vertices[vertexPtr + 8] = uvCoords.y
+
         vertexPtr += vertexFloatCount
     }
 
-    fun drawQuad(transform: Transform, color: Vector4f = Vector4f(1.0f)) {
+    fun drawCircle(transform: Transform, color: Vector4f = Vector4f(1.0f)) {
         allocateQuad()
 
         for(i in 0..3) {
@@ -190,10 +208,11 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
                 yPos = ry
             }
 
-            addVertex(Vector3f(xPos, yPos, transform.position.z), color)
+            addVertex(Vector3f(xPos, yPos, transform.position.z), color, Vector2f(quadVertexPositions[i]).mul(2.0f))
         }
 
         indexCount += 6 // 6 indices per quad
     }
+
 
 }

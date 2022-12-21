@@ -165,6 +165,10 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         glfwShowWindow(windowPtr)
 
         this.glCapabilities = GL.createCapabilities()
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        glCullFace(GL_BACK);
     }
 
     fun update() {

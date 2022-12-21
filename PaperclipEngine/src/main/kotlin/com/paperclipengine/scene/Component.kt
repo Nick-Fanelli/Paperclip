@@ -11,3 +11,5 @@ abstract class Component() {
 data class TransformComponent(val transform: Transform = Transform()) : Component()
 
 data class QuadRendererComponent(val color: Vector4f = Vector4f(1.0f)) : Component()
+
+data class CircleRendererComponent(val color: Vector4f = Vector4f(1.0f)) : Component()

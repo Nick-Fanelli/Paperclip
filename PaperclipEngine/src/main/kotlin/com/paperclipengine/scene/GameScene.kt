@@ -1,6 +1,7 @@
 package com.paperclipengine.scene
 
 import com.paperclipengine.graphics.camera.OrthographicCamera
+import com.paperclipengine.graphics.render.CircleRenderer
 import com.paperclipengine.graphics.render.QuadRenderer
 import com.paperclipengine.physics2d.Physics2DWorld
 
@@ -12,8 +13,11 @@ open class GameScene : Scene() {
     private val physicsWorld = Physics2DWorld(entityComponentSystem)
 
     private var quadRenderers: ArrayList<ComponentPair<QuadRendererComponent, TransformComponent>> = ArrayList()
+    private var circleRenderers: ArrayList<ComponentPair<CircleRendererComponent, TransformComponent>> = ArrayList()
 
     private lateinit var quadRenderer: QuadRenderer
+    private lateinit var circleRenderer: CircleRenderer
+
     fun createEntity() : Entity = entityComponentSystem.createEntity()
     fun destroyEntity(entity: Entity) = entityComponentSystem.destroyEntity(entity)
 
@@ -25,7 +29,16 @@ open class GameScene : Scene() {
         quadRenderer = QuadRenderer(this, camera)
         quadRenderer.create()
 
-        entityComponentSystem.addComponentTypeListener<QuadRendererComponent> { updateQuadRendererComponents() }
+        circleRenderer = CircleRenderer(this, camera)
+        circleRenderer.create()
+
+        entityComponentSystem.addComponentTypeListener<QuadRendererComponent> {
+            quadRenderers = entityComponentSystem.getAllComponentsByType(TransformComponent::class)
+        }
+
+        entityComponentSystem.addComponentTypeListener<CircleRendererComponent> {
+            circleRenderers = entityComponentSystem.getAllComponentsByType(TransformComponent::class)
+        }
     }
 
     override fun onUpdate(deltaTime: Float) {
@@ -34,24 +47,25 @@ open class GameScene : Scene() {
 
     }
 
-    private fun updateQuadRendererComponents() {
-        quadRenderers = entityComponentSystem.getAllComponentsByType<QuadRendererComponent, TransformComponent>(TransformComponent::class)
-    }
-
     protected fun onRender() {
         quadRenderer.begin()
-
         quadRenderers.forEach {
             quadRenderer.drawQuad(it.second.transform, it.first.color)
         }
-
         quadRenderer.end()
+
+        circleRenderer.begin()
+        circleRenderers.forEach {
+            circleRenderer.drawCircle(it.second.transform, it.first.color)
+        }
+        circleRenderer.end()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         quadRenderer.destroy()
+        circleRenderer.destroy()
     }
 
     override fun onWindowResize(aspectRatio: Float) {

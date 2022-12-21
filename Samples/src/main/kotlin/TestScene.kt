@@ -19,7 +19,7 @@ class TestScene : GameScene() {
         if(input.isKeyDown(Input.KEY_SPACE)) {
             val entity = createEntity()
             entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.1f, 0.1f, 0.1f))))
-            entity.addComponent(QuadRendererComponent())
+            entity.addComponent(CircleRendererComponent())
             entity.addComponent(Rigidbody2D())
         }
 
