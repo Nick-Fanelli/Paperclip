@@ -5,12 +5,18 @@ import com.paperclipengine.scene.EntityComponentSystem
 import com.paperclipengine.scene.TransformComponent
 import org.joml.Vector2f
 
+enum class RigidbodyType {
+    DYNAMIC, STATIC
+}
+
 class Rigidbody2D : Component() {
 
     var previousPosition = Vector2f()
     val acceleration = Vector2f()
 
     var hasGravity = true
+
+    var rigidbodyType: RigidbodyType = RigidbodyType.DYNAMIC
 
     override fun onAttach(ecs: EntityComponentSystem, entityID: Int) {
         val transformComponent = ecs.getComponent<TransformComponent>(entityID)

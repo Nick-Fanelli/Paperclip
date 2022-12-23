@@ -1,5 +1,6 @@
 import com.paperclipengine.application.Input
 import com.paperclipengine.graphics.Transform
+import com.paperclipengine.physics2d.CircleCollider
 import com.paperclipengine.physics2d.Rigidbody2D
 import com.paperclipengine.scene.*
 import org.joml.Vector3f
@@ -13,15 +14,22 @@ class TestScene : GameScene() {
         super.onCreate()
     }
 
+    var count = 0
+
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
 
-        if(input.isKeyDown(Input.KEY_SPACE)) {
+        if(count >= 10) {
             val entity = createEntity()
-            entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.1f, 0.1f, 0.1f))))
+            entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.2f, 0.2f, 0.1f))))
             entity.addComponent(CircleRendererComponent())
             entity.addComponent(Rigidbody2D())
+            entity.addComponent(CircleCollider())
+
+            count = 0
         }
+
+        count++
 
         if(input.isKey(Input.KEY_D)) {
             camera.position.x += deltaTime * cameraSpeed
@@ -49,6 +57,10 @@ class TestScene : GameScene() {
         }
 
         super.onRender()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
 }

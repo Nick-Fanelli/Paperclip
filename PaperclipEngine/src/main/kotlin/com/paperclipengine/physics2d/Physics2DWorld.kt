@@ -5,7 +5,7 @@ import com.paperclipengine.scene.TransformComponent
 import org.joml.Vector2f
 import org.joml.Vector3f
 
-data class PhysicsComponentData(val transformComponent: TransformComponent, val rigidbody2D: Rigidbody2D)
+data class PhysicsComponentData(val transformComponent: TransformComponent, val rigidbody2D: Rigidbody2D, var circleCollider: CircleCollider? = null)
 
 class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
 
@@ -19,6 +19,7 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
 
     init {
         entityComponentSystem.addComponentTypeListener<Rigidbody2D> { updatePhysicsComponentData() }
+        entityComponentSystem.addComponentTypeListener<CircleCollider> { updatePhysicsComponentData() }
     }
 
     fun onUpdate(deltaTime: Float) {
@@ -33,7 +34,10 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
         physicsComponentData.clear()
 
         entityComponentSystem.forEachComponentByType<Rigidbody2D, TransformComponent>(TransformComponent::class) {
-            physicsComponentData.add(PhysicsComponentData(it.second, it.first))
+            val data: PhysicsComponentData = PhysicsComponentData(it.second, it.first)
+            data.circleCollider = entityComponentSystem.getComponent<CircleCollider>(it.entityID)
+
+            physicsComponentData.add(data)
         }
     }
 
@@ -44,8 +48,14 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
     }
 
     private fun updateEntity(entity: PhysicsComponentData) {
+        if(entity.rigidbody2D.rigidbodyType == RigidbodyType.STATIC)
+            return
+
         applyConstraints(entity)
-        solveCollisions(entity)
+
+        if(entity.circleCollider != null)
+            solveCollisions(entity)
+
         calculatePosition(entity)
     }
 
@@ -93,10 +103,10 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
 
                 val distance = Vector2f.length(collisionAxis.x, collisionAxis.y)
 
-                if (distance < 0.1f) { // TODO: use calculated physics nodes
+                if (distance < entity.transformComponent.transform.scale.x) { // TODO: use calculated physics nodes
 
                     val n = collisionAxis.div(distance)
-                    val delta = 0.1f - distance
+                    val delta = entity.transformComponent.transform.scale.x - distance
                     entity.transformComponent.transform.position.add(correction * delta * n.x, correction * delta * n.y, 0f)
                     it.transformComponent.transform.position.sub(correction * delta * n.x, correction * delta * n.y, 0f)
                 }

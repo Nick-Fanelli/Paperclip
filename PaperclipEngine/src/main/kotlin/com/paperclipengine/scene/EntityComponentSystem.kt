@@ -14,7 +14,7 @@ data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID
 
 }
 
-data class ComponentPair<T: Component, V: Component>(val first: T, val second: V)
+data class ComponentPair<T: Component, V: Component>(val entityID: Int, val first: T, val second: V)
 
 class EntityComponentSystem {
 
@@ -115,7 +115,7 @@ class EntityComponentSystem {
 
         components[T::class]!!.forEach {
             if(components[V::class]!![it.key] != null)
-                callback(ComponentPair(it.value as T, components[V::class]!![it.key] as V))
+                callback(ComponentPair(it.key, it.value as T, components[V::class]!![it.key] as V))
         }
 
     }
