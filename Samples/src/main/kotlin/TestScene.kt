@@ -19,7 +19,7 @@ class TestScene : GameScene() {
     override fun onUpdate(deltaTime: Float) {
         super.onUpdate(deltaTime)
 
-        if(count >= 10) {
+        if(input.isKeyDown(Input.KEY_SPACE)) {
             val entity = createEntity()
             entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.2f, 0.2f, 0.1f))))
             entity.addComponent(CircleRendererComponent())
@@ -28,8 +28,6 @@ class TestScene : GameScene() {
 
             count = 0
         }
-
-        count++
 
         if(input.isKey(Input.KEY_D)) {
             camera.position.x += deltaTime * cameraSpeed
