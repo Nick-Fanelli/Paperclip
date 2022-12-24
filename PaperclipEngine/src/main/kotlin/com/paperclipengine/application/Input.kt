@@ -1,10 +1,9 @@
 package com.paperclipengine.application
 
-import org.joml.Vector2f
+import com.paperclipengine.math.Vector2f
 import org.lwjgl.glfw.GLFW.*
 
-
-class Input() {
+class Input {
 
     companion object {
         // Taken from glfw.h
@@ -159,7 +158,7 @@ class Input() {
 
     var scrollPosition      = Vector2f()
         private set
-    private var absScrollPosition   = Vector2f()
+    private val absScrollPosition   = Vector2f()
 
     fun bindCallbacks(windowPtr: Long) {
         glfwSetKeyCallback(windowPtr, ::keyCallback)
@@ -187,12 +186,12 @@ class Input() {
     }
 
     private fun mousePositionCallback(window: Long, xPos: Double, yPos: Double) {
-        mousePosition[xPos] = yPos
+        mousePosition.set(xPos.toFloat(), yPos.toFloat())
     }
 
     private fun mouseScrollCallback(window: Long, xOffset: Double, yOffset: Double) {
-        scrollPosition[xOffset] = yOffset
-        absScrollPosition.add(xOffset.toFloat(), yOffset.toFloat())
+        scrollPosition.set(xOffset.toFloat(), yOffset.toFloat())
+        absScrollPosition += Vector2f(xOffset.toFloat(), yOffset.toFloat())
     }
 
     fun isKey(keycode: Int): Boolean {

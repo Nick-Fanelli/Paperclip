@@ -1,8 +1,7 @@
 package com.paperclipengine.scene
 
 import com.paperclipengine.graphics.Transform
-import org.joml.Vector2f
-import org.joml.Vector4f
+import com.paperclipengine.math.Vector4f
 
 abstract class Component() {
     open fun onAttach(ecs: EntityComponentSystem, entityID: Int) {}

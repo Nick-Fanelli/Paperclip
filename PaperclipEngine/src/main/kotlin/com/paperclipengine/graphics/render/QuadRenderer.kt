@@ -4,10 +4,10 @@ import com.paperclipengine.graphics.Shader
 import com.paperclipengine.graphics.ShaderUniformLocation
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.graphics.camera.Camera
+import com.paperclipengine.math.Vector2f
+import com.paperclipengine.math.Vector3f
+import com.paperclipengine.math.Vector4f
 import com.paperclipengine.scene.Scene
-import org.joml.Vector2f
-import org.joml.Vector3f
-import org.joml.Vector4f
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL30.*
@@ -177,20 +177,19 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         allocateQuad()
 
         for(i in 0..3) {
-            var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
-            var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
+            val position = transform.position.toVector2f() + (quadVertexPositions[i] * transform.scale.toVector2f())
 
             if(transform.rotation != 0.0f) {
                 val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat()
 
-                val rx = (transform.position.x + (xPos - transform.position.x) * cos(radAngle.toDouble()) - (yPos - transform.position.y) * sin(radAngle.toDouble())).toFloat()
-                val ry = (transform.position.y + (xPos - transform.position.x) * sin(radAngle.toDouble()) + (yPos - transform.position.y) * cos(radAngle.toDouble())).toFloat()
-
-                xPos = rx
-                yPos = ry
+                // TODO: MAKE MORE EFFICIENT (derive more efficient expression)
+                position += (Vector2f(
+                    (transform.position.x + (position.x - transform.position.x) * cos(radAngle.toDouble()) - (position.y - transform.position.y) * sin(radAngle.toDouble())).toFloat(),
+                    (transform.position.y + (position.x - transform.position.x) * sin(radAngle.toDouble()) + (position.y - transform.position.y) * cos(radAngle.toDouble())).toFloat()
+                ))
             }
 
-            addVertex(Vector3f(xPos, yPos, transform.position.z), color)
+            addVertex(Vector3f(position, transform.position.z), color)
         }
 
         indexCount += 6 // 6 indices per quad
