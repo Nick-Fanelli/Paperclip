@@ -1,7 +1,7 @@
 package com.paperclipengine.graphics.camera
 
+import com.paperclipengine.math.Vector3f
 import org.joml.Matrix4f
-import org.joml.Vector3f
 
 class ObservableVector3f(val observer: () -> Unit, _x: Float = 0.0f, _y: Float = 0.0f, _z: Float = 0.0f) {
 

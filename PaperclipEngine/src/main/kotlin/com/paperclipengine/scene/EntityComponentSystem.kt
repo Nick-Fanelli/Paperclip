@@ -1,5 +1,6 @@
 package com.paperclipengine.scene
 
+import com.paperclipengine.physics2d.Physics2DWorld
 import kotlin.reflect.KClass
 
 data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
@@ -16,7 +17,7 @@ data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID
 
 data class ComponentPair<T: Component, V: Component>(val entityID: Int, val first: T, val second: V)
 
-class EntityComponentSystem {
+class EntityComponentSystem() {
 
     private var entitiesSize: Int = 0
     private val erasedEntityIDs: ArrayList<Int> = ArrayList()
@@ -96,6 +97,7 @@ class EntityComponentSystem {
         if(!components[T::class]!!.containsKey(entityID))
             throw RuntimeException("Entity does not contain that component")
 
+        components[T::class]!![entityID]!!.onDetach(this, entityID)
         components[T::class]!!.remove(entityID)
 
         callComponentTypeListener<T>()

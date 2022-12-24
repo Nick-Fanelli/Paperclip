@@ -5,6 +5,7 @@ import com.paperclipengine.math.Vector4f
 
 abstract class Component() {
     open fun onAttach(ecs: EntityComponentSystem, entityID: Int) {}
+    open fun onDetach(ecs: EntityComponentSystem, entityID: Int) {}
 }
 
 data class TransformComponent(val transform: Transform = Transform()) : Component()

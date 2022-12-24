@@ -1,32 +1,33 @@
 package com.paperclipengine.physics2d
 
 import com.paperclipengine.scene.Component
+import com.paperclipengine.scene.EntityComponentSystem
+import com.paperclipengine.scene.TransformComponent
+import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.BodyDef
+import org.jbox2d.dynamics.BodyType
 
-enum class RigidbodyType {
-    STATIC, DYNAMIC
-}
+class Rigidbody2D(private val physics2DWorld: Physics2DWorld) : Component() {
 
-class Rigidbody2D : Component() {
+    lateinit var physicsBody: Body
 
-    lateinit var body: Body
-        private set
+    override fun onAttach(ecs: EntityComponentSystem, entityID: Int) {
+        super.onAttach(ecs, entityID)
 
-    var rigidbodyType: RigidbodyType = RigidbodyType.DYNAMIC
-        set(value) {
-            field = value
-            createBody()
-        }
-
-    init {
-
-    }
-
-    private fun createBody() {
+        val transformComponent = ecs.getComponent<TransformComponent>(entityID)!!
 
         val bodyDef = BodyDef()
+        bodyDef.position = Vec2(transformComponent.transform.position.x, transformComponent.transform.position.y)
+        bodyDef.type = BodyType.DYNAMIC
 
+        this.physicsBody = physics2DWorld.world.createBody(bodyDef)
+    }
+
+    override fun onDetach(ecs: EntityComponentSystem, entityID: Int) {
+        super.onDetach(ecs, entityID)
+
+        physics2DWorld.world.destroyBody(physicsBody)
     }
 
 }

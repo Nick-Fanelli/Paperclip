@@ -203,17 +203,6 @@ class CircleRenderer(override val parentScene: Scene, private val camera: Camera
 
         for(i in 0..3) {
             val position = transform.position.toVector2f() + (quadVertexPositions[i] * transform.scale.toVector2f())
-
-            if(transform.rotation != 0.0f) {
-                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat()
-
-                // TODO: MAKE MORE EFFICIENT (derive more efficient expression)
-                position += (Vector2f(
-                    (transform.position.x + (position.x - transform.position.x) * cos(radAngle.toDouble()) - (position.y - transform.position.y) * sin(radAngle.toDouble())).toFloat(),
-                    (transform.position.y + (position.x - transform.position.x) * sin(radAngle.toDouble()) + (position.y - transform.position.y) * cos(radAngle.toDouble())).toFloat()
-                ))
-            }
-
             addVertex(Vector3f(position, transform.position.z), color, uvCoords[i])
         }
 

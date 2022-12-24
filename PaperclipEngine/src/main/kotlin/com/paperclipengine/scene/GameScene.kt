@@ -10,7 +10,7 @@ open class GameScene : Scene() {
     protected lateinit var camera: OrthographicCamera
 
     private val entityComponentSystem = EntityComponentSystem()
-    private val physicsWorld = Physics2DWorld(entityComponentSystem)
+    val physicsWorld = Physics2DWorld(entityComponentSystem)
 
     private var quadRenderers: ArrayList<ComponentPair<QuadRendererComponent, TransformComponent>> = ArrayList()
     private var circleRenderers: ArrayList<ComponentPair<CircleRendererComponent, TransformComponent>> = ArrayList()

@@ -1,7 +1,6 @@
 import com.paperclipengine.application.Input
 import com.paperclipengine.graphics.Transform
 import com.paperclipengine.math.Vector3f
-import com.paperclipengine.physics2d.CircleCollider
 import com.paperclipengine.physics2d.Rigidbody2D
 import com.paperclipengine.scene.*
 
@@ -20,10 +19,9 @@ class TestScene : GameScene() {
 
         if(input.isKeyDown(Input.KEY_SPACE)) {
             val entity = createEntity()
-            entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.2f, 0.2f, 0.1f))))
-            entity.addComponent(CircleRendererComponent())
-            entity.addComponent(Rigidbody2D())
-            entity.addComponent(CircleCollider())
+            entity.addComponent(TransformComponent(Transform(Vector3f(0.5f, 0f, 0f), Vector3f(0.2f, 0.2f, 0.1f), 45.0f)))
+            entity.addComponent(QuadRendererComponent())
+            entity.addComponent(Rigidbody2D(physicsWorld))
 
             count = 0
         }

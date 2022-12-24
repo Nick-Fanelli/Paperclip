@@ -180,7 +180,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
             val position = transform.position.toVector2f() + (quadVertexPositions[i] * transform.scale.toVector2f())
 
             if(transform.rotation != 0.0f) {
-                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat()
+                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat() * 2.0f
 
                 // TODO: MAKE MORE EFFICIENT (derive more efficient expression)
                 position += (Vector2f(

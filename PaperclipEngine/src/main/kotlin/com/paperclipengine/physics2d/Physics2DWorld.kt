@@ -1,34 +1,42 @@
 package com.paperclipengine.physics2d
 
+import com.paperclipengine.scene.ComponentPair
 import com.paperclipengine.scene.EntityComponentSystem
 import com.paperclipengine.scene.TransformComponent
-import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.*
 
-data class PhysicsComponentData(val transformComponent: TransformComponent, val rigidbody2D: Rigidbody2D, var circleCollider: CircleCollider? = null)
-
 class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
-
-    private val world: World = World(Vec2(0.0f, -9.8f))
 
     private val physicsTimeStep = 1.0f / 60.0f
 
-    fun test() {
-        val bodyDef = BodyDef()
-        val body = world.createBody(bodyDef)
-        body.type = BodyType.DYNAMIC
+    val world = World(Vec2(0f, -9.8f))
 
-        val shape = PolygonShape()
-        shape.setAsBox(1.0f, 1.0f)
+    var velocityIterations = 8
+    var positionIterations = 3
 
-        body.createFixture(shape, 0.0f)
+    private var physicsTime = 0.0f
+
+    private var rigidbodyComponents = ArrayList<ComponentPair<Rigidbody2D, TransformComponent>>()
+
+    init {
+        entityComponentSystem.addComponentTypeListener<Rigidbody2D> {
+            rigidbodyComponents = entityComponentSystem.getAllComponentsByType(TransformComponent::class)
+        }
     }
 
     fun onUpdate(deltaTime: Float) {
+        physicsTime += deltaTime
+
+        while(physicsTime >= physicsTimeStep) {
+            physicsTime -= physicsTimeStep
+            world.step(physicsTimeStep, velocityIterations, positionIterations)
+
+            rigidbodyComponents.forEach {
+                it.second.transform.position.set(it.first.physicsBody.position.x, it.first.physicsBody.position.y, it.second.transform.position.z)
+            }
+        }
 
     }
-
-//    fun setGravity(gravity: Vector2f) { this.world.gravity = Vec2(gravity.x, gravity.y) }
 
 }
