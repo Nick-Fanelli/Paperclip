@@ -55,6 +55,8 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     implementation("org.joml", "joml", jomlVersion)
+
+    implementation(files("/vendor/jbox2d-library-2.2.1.1.jar"))
 }
 
 tasks.test {
