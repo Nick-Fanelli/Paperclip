@@ -3,7 +3,7 @@ package com.paperclipengine.application
 import com.paperclipengine.scene.Scene
 import com.paperclipengine.scene.SceneManager
 
-class SingleWindowOpenGLApplication(private val applicationName: String, private val startingScene: (() -> Scene)? = null) : SingleWindowApplication(applicationName) {
+class SingleWindowOpenGLApplication(private val applicationName: String, private val startingScene: (() -> Scene)? = null, displayPreferences: DisplayPreferences = DisplayPreferences()) : SingleWindowApplication(applicationName, displayPreferences) {
 
     private lateinit var sceneManager: SceneManager
 

@@ -1,3 +1,4 @@
+import com.paperclipengine.application.DisplayPreferences
 import com.paperclipengine.application.SingleWindowOpenGLApplication
 
 fun main() {
@@ -7,7 +8,10 @@ fun main() {
 class EntryPoint {
 
     fun run() {
-        val application = SingleWindowOpenGLApplication("Paperclip Engine", ::TestScene)
+        val displayPreferences = DisplayPreferences()
+        displayPreferences.isVsyncEnabled = true
+
+        val application = SingleWindowOpenGLApplication("Paperclip Engine", ::TestScene, displayPreferences)
         application.startApplication()
     }
 

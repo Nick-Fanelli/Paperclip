@@ -34,6 +34,7 @@ class Physics2DWorld(private val entityComponentSystem: EntityComponentSystem) {
 
             rigidbodyComponents.forEach {
                 it.second.transform.position.set(it.first.physicsBody.position.x, it.first.physicsBody.position.y, it.second.transform.position.z)
+                it.second.transform.rotation = Math.toDegrees(it.first.physicsBody.angle.toDouble()).toFloat()
             }
         }
 

@@ -177,19 +177,20 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         allocateQuad()
 
         for(i in 0..3) {
-            val position = transform.position.toVector2f() + (quadVertexPositions[i] * transform.scale.toVector2f())
+            var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
+            var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
 
             if(transform.rotation != 0.0f) {
-                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat() * 2.0f
+                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat()
 
-                // TODO: MAKE MORE EFFICIENT (derive more efficient expression)
-                position += (Vector2f(
-                    (transform.position.x + (position.x - transform.position.x) * cos(radAngle.toDouble()) - (position.y - transform.position.y) * sin(radAngle.toDouble())).toFloat(),
-                    (transform.position.y + (position.x - transform.position.x) * sin(radAngle.toDouble()) + (position.y - transform.position.y) * cos(radAngle.toDouble())).toFloat()
-                ))
+                val rx = (transform.position.x + (xPos - transform.position.x) * cos(radAngle.toDouble()) - (yPos - transform.position.y) * sin(radAngle.toDouble())).toFloat()
+                val ry = (transform.position.y + (xPos - transform.position.x) * sin(radAngle.toDouble()) + (yPos - transform.position.y) * cos(radAngle.toDouble())).toFloat()
+
+                xPos = rx
+                yPos = ry
             }
 
-            addVertex(Vector3f(position, transform.position.z), color)
+            addVertex(Vector3f(xPos, yPos, transform.position.z), color)
         }
 
         indexCount += 6 // 6 indices per quad

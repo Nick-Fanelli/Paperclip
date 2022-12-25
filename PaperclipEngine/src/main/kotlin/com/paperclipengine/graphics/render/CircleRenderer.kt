@@ -202,8 +202,20 @@ class CircleRenderer(override val parentScene: Scene, private val camera: Camera
         allocateQuad()
 
         for(i in 0..3) {
-            val position = transform.position.toVector2f() + (quadVertexPositions[i] * transform.scale.toVector2f())
-            addVertex(Vector3f(position, transform.position.z), color, uvCoords[i])
+            var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
+            var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
+
+            if(transform.rotation != 0.0f) {
+                val radAngle: Float = Math.toRadians(transform.rotation.toDouble()).toFloat()
+
+                val rx = (transform.position.x + (xPos - transform.position.x) * cos(radAngle.toDouble()) - (yPos - transform.position.y) * sin(radAngle.toDouble())).toFloat()
+                val ry = (transform.position.y + (xPos - transform.position.x) * sin(radAngle.toDouble()) + (yPos - transform.position.y) * cos(radAngle.toDouble())).toFloat()
+
+                xPos = rx
+                yPos = ry
+            }
+
+            addVertex(Vector3f(xPos, yPos, transform.position.z), color, uvCoords[i])
         }
 
         indexCount += 6 // 6 indices per quad
