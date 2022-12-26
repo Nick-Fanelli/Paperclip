@@ -75,8 +75,6 @@ class TestScene : GameScene() {
         if(input.isKey(Input.KEY_ESCAPE)) {
             application.endApplication()
         }
-
-        super.onRender()
     }
 
     override fun onDestroy() {

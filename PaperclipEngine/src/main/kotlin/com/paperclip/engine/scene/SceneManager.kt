@@ -32,6 +32,7 @@ class SceneManager(val application: SingleWindowOpenGLApplication) {
 
     fun onUpdate(deltaTime: Float) {
         currentScene?.onUpdate(deltaTime)
+        currentScene?.onRender()
         input.update()
     }
 

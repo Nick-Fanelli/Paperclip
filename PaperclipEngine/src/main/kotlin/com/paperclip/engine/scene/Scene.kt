@@ -10,6 +10,7 @@ abstract class Scene {
 
     open fun onCreate() {}
     open fun onUpdate(deltaTime: Float) {}
+    open fun onRender() {}
     open fun onDestroy() {}
 
     open fun onWindowResize(aspectRatio: Float) {}

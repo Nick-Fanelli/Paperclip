@@ -42,12 +42,10 @@ open class GameScene : Scene() {
     }
 
     override fun onUpdate(deltaTime: Float) {
-
         physicsWorld.onUpdate(deltaTime)
-
     }
 
-    protected fun onRender() {
+    override fun onRender() {
         quadRenderer.begin()
         quadRenderers.forEach {
             quadRenderer.drawQuad(it.second.transform, it.first.color)

@@ -27,8 +27,6 @@ class EditorScene : GameScene() {
         super.onUpdate(deltaTime)
 
         this.imGuiLayer.onUpdate(deltaTime)
-
-        super.onRender()
     }
 
     override fun onDestroy() {
