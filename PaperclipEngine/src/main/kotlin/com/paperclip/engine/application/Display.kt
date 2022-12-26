@@ -1,5 +1,6 @@
 package com.paperclip.engine.application
 
+import com.paperclip.engine.utils.Logger
 import com.paperclip.engine.utils.PaperclipEngineFatalException
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -19,7 +20,7 @@ private fun initializeGLFW() {
     // will print the error message in System.err.
     // Setup an error callback. The default implementation
     // will print the error message in System.err.
-    println("Initializing GLFW")
+    Logger.info("Initializing GLFW")
     GLFWErrorCallback.createPrint(System.err).set()
 
     // Initialize GLFW. Most GLFW functions will not work before doing this.
@@ -28,7 +29,7 @@ private fun initializeGLFW() {
 }
 
 private fun disposeGLFW() {
-    println("Disposing GLFW")
+    Logger.info("Disposing GLFW")
     glfwTerminate()
     glfwSetErrorCallback(null)?.free()
 }
@@ -125,9 +126,11 @@ class Display(private val windowTitle: String, private var displayPreferences: D
 
         this.glCapabilities = GL.createCapabilities()
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        glCullFace(GL_BACK);
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA)
+        glCullFace(GL_BACK)
+
+        Logger.info("Created Display")
     }
 
     fun update() {
@@ -165,6 +168,7 @@ class Display(private val windowTitle: String, private var displayPreferences: D
 
     fun closeDisplay() {
         glfwSetWindowShouldClose(windowPtr, true)
+        Logger.info("Set window to close")
     }
 
     fun cleanUp() {
