@@ -1,9 +1,9 @@
 package com.paperclip.engine.scene
 
+import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
-import com.paperclip.engine.application.SingleWindowOpenGLApplication
 
-class SceneManager(val application: SingleWindowOpenGLApplication) {
+class SceneManager(val application: Application) {
 
     private var input = Input()
 

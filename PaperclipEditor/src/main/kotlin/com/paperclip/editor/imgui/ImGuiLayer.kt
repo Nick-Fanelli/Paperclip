@@ -1,6 +1,6 @@
 package com.paperclip.editor.imgui
 
-import com.paperclip.engine.application.SingleWindowOpenGLApplication
+import com.paperclip.engine.application.Application
 import imgui.ImGui
 import imgui.ImGuiIO
 import imgui.flag.*
@@ -17,7 +17,7 @@ class ImGuiLayer() {
 
     private val viewport = Viewport()
 
-    fun onCreate(application: SingleWindowOpenGLApplication) {
+    fun onCreate(application: Application) {
         ImGui.createContext()
 
         io = ImGui.getIO()

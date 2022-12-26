@@ -1,6 +1,6 @@
 package com.paperclip.editor
 
-import com.paperclip.engine.application.SingleWindowOpenGLApplication
+import com.paperclip.engine.application.Application
 
 fun main() {
     Paperclip()
@@ -9,7 +9,7 @@ fun main() {
 class Paperclip {
 
     init {
-        val application = SingleWindowOpenGLApplication("Paperclip", ::EditorScene)
+        val application = Application("Paperclip", ::EditorScene)
         application.startApplication()
     }
 

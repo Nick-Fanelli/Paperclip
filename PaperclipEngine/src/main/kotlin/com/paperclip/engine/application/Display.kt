@@ -33,48 +33,6 @@ private fun disposeGLFW() {
     glfwSetErrorCallback(null)?.free()
 }
 
-data class DisplayStackPointer(val stackIndex: Int)
-
-object DisplayStack {
-
-    private val displays = ArrayList<Display>()
-
-    fun pushDisplay(display: Display) : DisplayStackPointer {
-        val displayPtr = displays.size
-
-        displays.add(displays.size, display)
-        return DisplayStackPointer(displayPtr)
-    }
-
-    fun popDisplay(displayPtr: DisplayStackPointer = DisplayStackPointer(displays.size)) {
-        displays.removeAt(displayPtr.stackIndex)
-    }
-
-    private val displaysToBeRemoved = ArrayList<Display>()
-
-    private fun updateDisplayStack() {
-        for(display in displays) {
-           if(!glfwWindowShouldClose(display.windowPtr))
-               display.update()
-            else
-                displaysToBeRemoved.add(display)
-        }
-
-        if(displaysToBeRemoved.size > 0) {
-            for(display in displaysToBeRemoved)
-                displays.remove(display)
-
-            displaysToBeRemoved.clear()
-        }
-    }
-
-    fun iterateStackUntilEmpty() {
-        while(displays.size > 0)
-            updateDisplayStack()
-    }
-
-}
-
 class DisplayPreferences {
 
     var displayName: String? = null
@@ -198,6 +156,11 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         }
 
         frameCount++
+    }
+
+    fun continuouslyUpdateDisplayUntilCloseRequested() {
+        while(!glfwWindowShouldClose(this.windowPtr))
+            this.update()
     }
 
     fun closeDisplay() {

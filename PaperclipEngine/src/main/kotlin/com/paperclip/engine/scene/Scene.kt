@@ -1,12 +1,12 @@
 package com.paperclip.engine.scene
 
+import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
-import com.paperclip.engine.application.SingleWindowOpenGLApplication
 
 abstract class Scene {
 
     lateinit var input: Input
-    lateinit var application: SingleWindowOpenGLApplication
+    lateinit var application: Application
 
     open fun onCreate() {}
     open fun onUpdate(deltaTime: Float) {}

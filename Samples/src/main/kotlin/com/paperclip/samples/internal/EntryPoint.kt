@@ -1,7 +1,7 @@
 package com.paperclip.samples.internal
 
+import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.DisplayPreferences
-import com.paperclip.engine.application.SingleWindowOpenGLApplication
 
 fun main() {
     EntryPoint().run()
@@ -10,10 +10,7 @@ fun main() {
 class EntryPoint {
 
     fun run() {
-        val displayPreferences = DisplayPreferences()
-        displayPreferences.isVsyncEnabled = true
-
-        val application = SingleWindowOpenGLApplication("Paperclip Engine", ::TestScene, displayPreferences)
+        val application = Application("Paperclip Engine", ::TestScene)
         application.startApplication()
     }
 
