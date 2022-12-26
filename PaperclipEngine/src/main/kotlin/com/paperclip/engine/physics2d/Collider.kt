@@ -5,6 +5,7 @@ import com.paperclip.engine.scene.Component
 import com.paperclip.engine.scene.Entity
 import com.paperclip.engine.scene.EntityComponentSystem
 import com.paperclip.engine.scene.TransformComponent
+import com.paperclip.engine.utils.PaperclipEngineFatalException
 import org.jbox2d.collision.shapes.CircleShape
 import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
@@ -30,7 +31,7 @@ class BoxCollider(private val boxColliderInitializationType: BoxColliderInitiali
     override fun onAttach(ecs: EntityComponentSystem, entityID: Int) {
         super.onAttach(ecs, entityID)
 
-        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw RuntimeException("Entity must contain a rigidbody component first")
+        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw PaperclipEngineFatalException("Entity must contain a rigidbody component first")
 
         val scale = if(boxColliderInitializationType == BoxColliderInitializationType.MANUALLY_SET_SIZE) { manualSize } else {
             ecs.getComponent<TransformComponent>(entityID)!!.transform.scale.toVector2f() }
@@ -50,7 +51,7 @@ class BoxCollider(private val boxColliderInitializationType: BoxColliderInitiali
     override fun onDetach(ecs: EntityComponentSystem, entityID: Int) {
         super.onDetach(ecs, entityID)
 
-        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw RuntimeException("Entity must contain a rigidbody component first")
+        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw PaperclipEngineFatalException("Entity must contain a rigidbody component first")
 
         rigidbody2D.physicsBody.destroyFixture(this.fixture)
     }
@@ -65,7 +66,7 @@ class CircleCollider : Collider() {
     override fun onAttach(ecs: EntityComponentSystem, entityID: Int) {
         super.onAttach(ecs, entityID)
 
-        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw RuntimeException("Entity must contain a rigidbody component first")
+        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw PaperclipEngineFatalException("Entity must contain a rigidbody component first")
 
         val radius = ecs.getComponent<TransformComponent>(entityID)!!.transform.scale.x
 
@@ -82,7 +83,7 @@ class CircleCollider : Collider() {
     override fun onDetach(ecs: EntityComponentSystem, entityID: Int) {
         super.onDetach(ecs, entityID)
 
-        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw RuntimeException("Entity must contain a rigidbody component first")
+        val rigidbody2D = ecs.getComponent<Rigidbody2D>(entityID) ?: throw PaperclipEngineFatalException("Entity must contain a rigidbody component first")
 
         rigidbody2D.physicsBody.destroyFixture(this.fixture)
     }

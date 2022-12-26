@@ -1,6 +1,7 @@
 package com.paperclip.engine.scene
 
 import com.paperclip.engine.physics2d.Physics2DWorld
+import com.paperclip.engine.utils.PaperclipEngineFatalException
 import kotlin.reflect.KClass
 
 data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
@@ -72,7 +73,7 @@ class EntityComponentSystem() {
         }
 
         if(components[component::class]!!.containsKey(entityID))
-            throw RuntimeException("Only allowed to have one instance")
+            throw PaperclipEngineFatalException("Only allowed to have one instance")
 
         components[component::class]?.put(entityID, component)
         callComponentTypeListener<T>()
@@ -92,10 +93,10 @@ class EntityComponentSystem() {
 
     inline fun <reified T: Component> removeComponent(entityID: Int) {
         if(components[T::class] == null)
-            throw RuntimeException("Invalid Component Type")
+            throw PaperclipEngineFatalException("Invalid Component Type")
 
         if(!components[T::class]!!.containsKey(entityID))
-            throw RuntimeException("Entity does not contain that component")
+            throw PaperclipEngineFatalException("Entity does not contain that component")
 
         components[T::class]!![entityID]!!.onDetach(this, entityID)
         components[T::class]!!.remove(entityID)

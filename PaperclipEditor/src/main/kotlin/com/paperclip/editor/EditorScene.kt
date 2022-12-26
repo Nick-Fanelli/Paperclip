@@ -2,11 +2,9 @@ package com.paperclip.editor
 
 import com.paperclip.editor.imgui.ImGuiLayer
 import com.paperclip.engine.graphics.Transform
-import com.paperclip.engine.graphics.render.QuadRenderer
 import com.paperclip.engine.math.Vector3f
 import com.paperclip.engine.scene.GameScene
 import com.paperclip.engine.scene.QuadRendererComponent
-import com.paperclip.engine.scene.Scene
 import com.paperclip.engine.scene.TransformComponent
 
 class EditorScene : GameScene() {

@@ -1,6 +1,7 @@
 package com.paperclip.engine.graphics
 
 import com.paperclip.engine.utils.FileUtils
+import com.paperclip.engine.utils.PaperclipEngineFatalException
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
@@ -35,14 +36,14 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
         val shaderID = glCreateShader(shaderType)
 
         if(shaderID == NULL.toInt()) {
-            throw RuntimeException("Error creating shader. Type: $shaderType")
+            throw PaperclipEngineFatalException("Error creating shader. Type: $shaderType")
         }
 
         glShaderSource(shaderID, shaderCode)
         glCompileShader(shaderID)
 
         if(glGetShaderi(shaderID, GL_COMPILE_STATUS) == 0) {
-            throw RuntimeException("Error compiling shader code: ${glGetShaderInfoLog(shaderID, 1024)}")
+            throw PaperclipEngineFatalException("Error compiling shader code: ${glGetShaderInfoLog(shaderID, 1024)}")
         }
 
         glAttachShader(programID, shaderID)
@@ -59,7 +60,7 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
         val err = glGetProgramInfoLog(programID, len)
 
         if(comp == GL_FALSE)
-            throw RuntimeException(err)
+            throw PaperclipEngineFatalException(err)
 
         for(shader in shaders) {
             glDetachShader(programID, shader)

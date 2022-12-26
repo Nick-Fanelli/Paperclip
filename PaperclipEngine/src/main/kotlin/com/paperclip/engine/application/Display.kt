@@ -1,5 +1,6 @@
 package com.paperclip.engine.application
 
+import com.paperclip.engine.utils.PaperclipEngineFatalException
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -122,7 +123,7 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         // Create the window
         windowPtr = glfwCreateWindow(displayPreferences.displaySize.width, displayPreferences.displaySize.height,
             if(displayPreferences.displayName == null) windowTitle else displayPreferences.displayName!! , NULL, NULL)
-        if (windowPtr == NULL) throw RuntimeException("Failed to create the GLFW window")
+        if (windowPtr == NULL) throw PaperclipEngineFatalException("Failed to create the GLFW window")
 
         aspectRatio = displayPreferences.displaySize.width.toFloat() / displayPreferences.displaySize.height.toFloat()
 
