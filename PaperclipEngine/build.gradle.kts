@@ -40,23 +40,23 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 
-    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    api(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
-    implementation("org.lwjgl", "lwjgl")
-    implementation("org.lwjgl", "lwjgl-assimp")
-    implementation("org.lwjgl", "lwjgl-glfw")
-    implementation("org.lwjgl", "lwjgl-openal")
-    implementation("org.lwjgl", "lwjgl-opengl")
-    implementation("org.lwjgl", "lwjgl-stb")
+    api("org.lwjgl", "lwjgl")
+    api("org.lwjgl", "lwjgl-assimp")
+    api("org.lwjgl", "lwjgl-glfw")
+    api("org.lwjgl", "lwjgl-openal")
+    api("org.lwjgl", "lwjgl-opengl")
+    api("org.lwjgl", "lwjgl-stb")
     runtimeOnly("org.lwjgl", "lwjgl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-assimp", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-openal", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
-    implementation("org.joml", "joml", jomlVersion)
+    api("org.joml", "joml", jomlVersion)
 
-    implementation(files("/vendor/jbox2d-library-2.2.1.1.jar"))
+    api(files("/vendor/jbox2d-library-2.2.1.1.jar"))
 }
 
 tasks.test {
