@@ -11,10 +11,16 @@ repositories {
 
 dependencies {
 
-    implementation(project(":PaperclipEngine"))
+    api(project(":PaperclipEngine"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    implementation("io.github.spair:imgui-java-binding")
+    implementation("io.github.spair:imgui-java-lwjgl3")
+
+    // TODO: Implement the others based on os
+    // imgui-java-natives-windows
+    // imgui-java-natives-linux
+    // imgui-java-natives-macos
+    implementation("io.github.spair:imgui-java-app:1.86.5")
 }
 
 tasks.getByName<Test>("test") {

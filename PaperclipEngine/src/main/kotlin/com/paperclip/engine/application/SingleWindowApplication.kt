@@ -3,7 +3,7 @@ package com.paperclip.engine.application
 abstract class SingleWindowApplication(applicationName: String, displayPreferences: DisplayPreferences = DisplayPreferences())
     : com.paperclip.engine.application.Application(applicationName) {
 
-    protected val display = Display(applicationName, displayPreferences)
+    val display = Display(applicationName, displayPreferences)
 
     init {
         display.createDisplay(::onUpdate)
