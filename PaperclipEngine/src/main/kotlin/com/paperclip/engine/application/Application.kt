@@ -21,7 +21,7 @@ open class Application(applicationName: String, private val startingScene: (() -
         if(startingScene != null)
             sceneManager.setScene(startingScene)
 
-        display.windowResizeCallback = ::windowResize
+        display.addWindowResizeCallback(::windowResize)
 
         Logger.info("Starting Display Continuous Loop")
         display.continuouslyUpdateDisplayUntilCloseRequested()
@@ -43,6 +43,6 @@ open class Application(applicationName: String, private val startingScene: (() -
         display.cleanUp()
     }
 
-    private fun windowResize(aspectRatio: Float) = sceneManager.onWindowResize(aspectRatio)
+    private fun windowResize(_width: Int, _height: Int) = sceneManager.onWindowResize(display.aspectRatio)
 
 }

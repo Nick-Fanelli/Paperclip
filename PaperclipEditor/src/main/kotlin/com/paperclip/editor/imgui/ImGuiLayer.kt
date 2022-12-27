@@ -15,8 +15,6 @@ class ImGuiLayer() {
 
     private lateinit var io: ImGuiIO
 
-    private val viewport = Viewport()
-
     fun onCreate(application: Application) {
         ImGui.createContext()
 
@@ -34,7 +32,7 @@ class ImGuiLayer() {
         applyImGuiColors()
     }
 
-    fun onUpdate(deltaTime: Float) {
+    fun onRender() {
         imGuiImplGlfw.newFrame()
         ImGui.newFrame()
 
@@ -53,7 +51,6 @@ class ImGuiLayer() {
     }
 
     private fun onImGuiRender() {
-        viewport.onImGuiRender()
     }
 
     private val dockingWindowFlags = ImGuiWindowFlags.MenuBar or
@@ -65,10 +62,9 @@ class ImGuiLayer() {
             ImGuiWindowFlags.NoNav or
             ImGuiWindowFlags.NoResize or
             ImGuiWindowFlags.NoNavFocus or
-            ImGuiWindowFlags.NoDecoration or
-            ImGuiWindowFlags.NoInputs
+            ImGuiWindowFlags.NoDecoration
 
-    private val dockingFlags = ImGuiDockNodeFlags.None
+    private val dockingFlags = ImGuiDockNodeFlags.PassthruCentralNode
 
     private fun renderDockspace() {
         val viewport = ImGui.getMainViewport()

@@ -2,6 +2,7 @@ package com.paperclip.engine.application
 
 import com.paperclip.engine.utils.Logger
 import com.paperclip.engine.utils.PaperclipEngineFatalException
+import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -12,6 +13,7 @@ import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.MemoryStack.stackPush
 import org.lwjgl.system.MemoryUtil.NULL
 import java.awt.Dimension
+import java.nio.IntBuffer
 
 private val DISPLAYS = ArrayList<Display>()
 
@@ -53,9 +55,11 @@ class Display(private val windowTitle: String, private var displayPreferences: D
     var aspectRatio = 0.0f
         private set
 
-    private lateinit var updateCallback: (_: Float) -> Any
+    private lateinit var updateCallback: (_: Float) -> Unit
 
-    var windowResizeCallback: ((_: Float) -> Any)? = null
+    private val windowResizeCallbackArray: ArrayList<(width: Int, height: Int) -> Unit> = ArrayList()
+    fun addWindowResizeCallback(callback: (width: Int, height: Int) -> Unit) { windowResizeCallbackArray.add(callback) }
+    fun removeWindowResizeCallback(callback: (width: Int, height: Int) -> Unit) { windowResizeCallbackArray.remove(callback) }
 
     private lateinit var glCapabilities: GLCapabilities
 
@@ -66,7 +70,7 @@ class Display(private val windowTitle: String, private var displayPreferences: D
 
     private var frameCount = 0
 
-    fun createDisplay(updateCallback: (_: Float) -> Any) {
+    fun createDisplay(updateCallback: (_: Float) -> Unit) {
         if(DISPLAYS.size <= 0)
             initializeGLFW()
         DISPLAYS.add(this)
@@ -116,8 +120,9 @@ class Display(private val windowTitle: String, private var displayPreferences: D
                 aspectRatio = width.toFloat() / height.toFloat()
                 glViewport(0, 0, width, height)
 
-                windowResizeCallback?.let { it(aspectRatio) }
-
+                for(callback in windowResizeCallbackArray) {
+                    callback(width, height)
+                }
             }
         })
 
@@ -133,7 +138,7 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         Logger.info("Created Display")
     }
 
-    fun update() {
+    private fun update() {
         GL.setCapabilities(this.glCapabilities)
 
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
@@ -159,6 +164,15 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         }
 
         frameCount++
+    }
+
+    fun getWindowSize() : Pair<Int, Int> {
+        val width = BufferUtils.createIntBuffer(1)
+        val height = BufferUtils.createIntBuffer(1)
+
+        glfwGetWindowSize(windowPtr, width, height)
+
+        return Pair(width[0], height[0])
     }
 
     fun continuouslyUpdateDisplayUntilCloseRequested() {

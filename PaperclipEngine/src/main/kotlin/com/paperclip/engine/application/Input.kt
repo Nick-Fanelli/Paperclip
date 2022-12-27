@@ -154,6 +154,8 @@ class Input {
 
     var mousePosition       = Vector2f()
         private set
+    var deltaMousePosition = Vector2f()
+        private set
     private var mousePositionLast   = Vector2f()
 
     var scrollPosition      = Vector2f()
@@ -171,7 +173,9 @@ class Input {
         keys.copyInto(keysLast)
         mouseButtons.copyInto(mouseButtonsLast)
 
-        mousePositionLast = mousePosition
+        deltaMousePosition = mousePosition - mousePositionLast
+
+        mousePositionLast.set(mousePosition)
         scrollPosition.zero()
     }
 

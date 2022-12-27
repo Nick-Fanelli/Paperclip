@@ -64,8 +64,6 @@ open class GameScene : Scene() {
 
         quadRenderer.destroy()
         circleRenderer.destroy()
-
-        println(entityComponentSystem.components[TransformComponent::class]!!.size)
     }
 
     override fun onWindowResize(aspectRatio: Float) {

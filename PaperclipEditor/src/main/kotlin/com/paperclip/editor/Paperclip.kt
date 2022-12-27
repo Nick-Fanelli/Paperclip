@@ -9,6 +9,8 @@ fun main() {
 class Paperclip {
 
     init {
+        // TODO: Load the Editor Config Data into EditorConfig.kt
+
         val application = Application("Paperclip", ::EditorScene)
         application.startApplication()
     }
