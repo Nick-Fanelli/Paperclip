@@ -25,7 +25,7 @@ import com.paperclip.engine.scene.*
 // Main method to start the program
 fun main() {
     // Create the application and link the scene
-    val application = Application("Paperclip Engine", ::PhysicsSimulationScene)
+    val application = Application(PhysicsSimulationScene::class, "Paperclip Engine", ::PhysicsSimulationScene)
 
     // Start the Application
     application.startApplication()

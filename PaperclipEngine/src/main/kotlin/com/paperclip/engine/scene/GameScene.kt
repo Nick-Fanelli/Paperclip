@@ -1,5 +1,6 @@
 package com.paperclip.engine.scene
 
+import com.paperclip.engine.asset.AssetManager
 import com.paperclip.engine.graphics.camera.OrthographicCamera
 import com.paperclip.engine.graphics.render.CircleRenderer
 import com.paperclip.engine.graphics.render.QuadRenderer
@@ -8,6 +9,9 @@ import com.paperclip.engine.physics2d.Physics2DWorld
 open class GameScene : Scene() {
 
     protected lateinit var camera: OrthographicCamera
+
+    protected lateinit var assetManager: AssetManager
+        private set
 
     private val entityComponentSystem = EntityComponentSystem()
     val physicsWorld = Physics2DWorld(entityComponentSystem)
@@ -23,6 +27,8 @@ open class GameScene : Scene() {
 
     override fun onCreate() {
         super.onCreate()
+
+        this.assetManager = super.application.assetManager
 
         camera = OrthographicCamera()
 
