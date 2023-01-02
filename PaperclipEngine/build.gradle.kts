@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.ir.backend.js.compile
 
 val lwjglVersion = "3.3.1"
 val jomlVersion = "1.10.5"
@@ -40,6 +41,8 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 
+    implementation(kotlin("reflect"))
+
     api(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
     api("org.lwjgl", "lwjgl")
@@ -58,7 +61,7 @@ dependencies {
 
     implementation(files("/vendor/jbox2d-library-2.2.1.1.jar"))
 
-    implementation("com.beust:klaxon:5.6")
+    implementation("com.googlecode.json-simple:json-simple:1.1.1")
 }
 
 tasks.test {

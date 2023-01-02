@@ -2,7 +2,9 @@ package com.paperclip.engine.ldtk
 
 import com.paperclip.engine.asset.Asset
 import com.paperclip.engine.utils.FileUtils
+import com.paperclip.engine.utils.json.JSONUtils
 import kotlin.reflect.KClass
+import kotlin.reflect.full.hasAnnotation
 
 class LDTKWorld : Asset {
 
@@ -10,9 +12,12 @@ class LDTKWorld : Asset {
 
     override fun createFromPath(kClass: KClass<*>, path: String): Asset {
 
-        println(kClass)
+        jsonText = FileUtils.readResourceFileAsString(kClass, path)
 
-        println(FileUtils.readResourceFileAsString(kClass, path))
+        val jsonTarget = LDTKWorldJSONTarget()
+        JSONUtils.parseJson(jsonText, jsonTarget)
+
+//        println(jsonTarget)
 
         return this
     }
