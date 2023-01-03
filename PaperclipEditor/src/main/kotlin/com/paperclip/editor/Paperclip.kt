@@ -11,7 +11,7 @@ class Paperclip {
     init {
         // TODO: Load the Editor Config Data into EditorConfig.kt
 
-        val application = Application("Paperclip", ::EditorScene)
+        val application = Application(Paperclip::class, "Paperclip", ::EditorScene)
         application.startApplication()
     }
 

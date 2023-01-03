@@ -1,7 +1,7 @@
 package com.paperclip.engine.ldtk
 
-import com.paperclip.engine.utils.json.JSONField
-import com.paperclip.engine.utils.json.JSONTarget
+import com.paperclip.engine.utils.JSONField
+import com.paperclip.engine.utils.JSONTarget
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 

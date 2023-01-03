@@ -1,11 +1,9 @@
-package com.paperclip.engine.utils.json
+package com.paperclip.engine.utils
 
-import com.paperclip.engine.utils.Logger
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.*
-import kotlin.reflect.jvm.javaSetter
 
 private const val JSONFieldNULL = "_!NULL!_"
 

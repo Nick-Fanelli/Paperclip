@@ -2,7 +2,7 @@ package com.paperclip.engine.ldtk
 
 import com.paperclip.engine.asset.Asset
 import com.paperclip.engine.utils.FileUtils
-import com.paperclip.engine.utils.json.JSONUtils
+import com.paperclip.engine.utils.JSONUtils
 import kotlin.reflect.KClass
 import kotlin.reflect.full.hasAnnotation
 
