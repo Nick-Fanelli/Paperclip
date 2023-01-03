@@ -51,11 +51,12 @@ open class GameScene : Scene() {
     }
 
     open fun onRenderLoadingScreen() {
-//        application.display.requestUpdate {
-//            quadRenderer.begin()
-//            quadRenderer.drawQuad(Transform())
-//            quadRenderer.end()
-//        }
+        // TODO: Replace with loading text
+        application.display.requestUpdate {
+            quadRenderer.begin()
+            quadRenderer.drawQuad(Transform())
+            quadRenderer.end()
+        }
     }
 
     override fun onUpdate(deltaTime: Float) {
