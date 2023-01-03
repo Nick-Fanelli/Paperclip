@@ -1,6 +1,7 @@
 package com.paperclip.engine.scene
 
 import com.paperclip.engine.asset.AssetManager
+import com.paperclip.engine.graphics.Transform
 import com.paperclip.engine.graphics.camera.OrthographicCamera
 import com.paperclip.engine.graphics.render.CircleRenderer
 import com.paperclip.engine.graphics.render.QuadRenderer
@@ -45,6 +46,16 @@ open class GameScene : Scene() {
         entityComponentSystem.addComponentTypeListener<CircleRendererComponent> {
             circleRenderers = entityComponentSystem.getAllComponentsByType(TransformComponent::class)
         }
+
+        this.onRenderLoadingScreen()
+    }
+
+    open fun onRenderLoadingScreen() {
+//        application.display.requestUpdate {
+//            quadRenderer.begin()
+//            quadRenderer.drawQuad(Transform())
+//            quadRenderer.end()
+//        }
     }
 
     override fun onUpdate(deltaTime: Float) {
@@ -54,7 +65,8 @@ open class GameScene : Scene() {
     override fun onRender() {
         quadRenderer.begin()
         quadRenderers.forEach {
-            quadRenderer.drawQuad(it.second.transform, it.first.color)
+            if(it.first.isActive)
+                quadRenderer.drawQuad(it.second.transform, it.first.color)
         }
         quadRenderer.end()
 

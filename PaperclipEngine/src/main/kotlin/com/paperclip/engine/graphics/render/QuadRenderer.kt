@@ -42,7 +42,6 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     private lateinit var vertices: FloatArray
 
     private var vertexPtr = 0
-    private var indexCount = 0
 
     private var vaoID = 0
     private var vboID = 0
@@ -105,7 +104,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
     private fun updateBatchVertexData() {
         glBindBuffer(GL_ARRAY_BUFFER, vboID)
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices)
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.take(vertexPtr * vertexFloatCount).toFloatArray())
         glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
@@ -122,7 +121,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID)
 
-        GL11.glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0)
+        GL11.glDrawElements(GL_TRIANGLES, (vertexPtr / vertexFloatCount) * 6, GL_UNSIGNED_INT, 0) // 4 indices per vertex
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
 
@@ -192,8 +191,6 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
             addVertex(Vector3f(xPos, yPos, transform.position.z), color)
         }
-
-        indexCount += 6 // 6 indices per quad
     }
 
 }

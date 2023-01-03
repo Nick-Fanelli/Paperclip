@@ -9,6 +9,7 @@ abstract class Scene {
     lateinit var application: Application
 
     open fun onCreate() {}
+    open fun onStart() {}
     open fun onUpdate(deltaTime: Float) {}
     open fun onRender() {}
     open fun onDestroy() {}

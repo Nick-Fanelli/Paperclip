@@ -4,6 +4,8 @@ import com.paperclip.engine.graphics.Transform
 import com.paperclip.engine.math.Vector4f
 
 abstract class Component() {
+    var isActive = true
+
     open fun onAttach(ecs: EntityComponentSystem, entityID: Int) {}
     open fun onDetach(ecs: EntityComponentSystem, entityID: Int) {}
 }

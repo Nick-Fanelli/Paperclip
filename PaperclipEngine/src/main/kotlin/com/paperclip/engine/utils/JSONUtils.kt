@@ -2,6 +2,7 @@ package com.paperclip.engine.utils
 
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
+import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.*
 
@@ -11,28 +12,16 @@ private const val JSONFieldNULL = "_!NULL!_"
 @Retention(AnnotationRetention.RUNTIME)
 annotation class JSONField(val name: String = JSONFieldNULL)
 
-abstract class JSONTarget {
-    override fun toString(): String {
-
-        val stringBuilder = StringBuilder()
-
-        this.javaClass.declaredFields.forEach {
-            stringBuilder.append("${it.name} = ${it.get(this)}")
-            stringBuilder.append("\n")
-        }
-
-        return stringBuilder.toString()
-    }
-}
-
 internal object JSONUtils {
 
     private val jsonParser = JSONParser()
 
-    internal fun parseJson(json: String, target: JSONTarget) : JSONObject {
-        val jsonObject = jsonParser.parse(json) as JSONObject
+    internal fun parseJson(json: String) = jsonParser.parse(json) as JSONObject
 
-        for(member in target::class.memberProperties) {
+    internal inline fun <reified T: Any> jsonToObject(jsonObject: JSONObject) : T {
+        val obj = T::class.createInstance()
+
+        for(member in obj::class.memberProperties) {
             // Contains JSON Field Annotation
             val memberAnnotation = member.findAnnotation<JSONField>()
 
@@ -52,16 +41,13 @@ internal object JSONUtils {
                     if (jsonObject[memberName] == null) {
                         Logger.warn("JSON object at $memberName is equal to null\n\tStatus: Not initializing")
                     } else {
-                        (member as KMutableProperty<*>).setter.call(target, jsonObject[memberName])
+                        (member as KMutableProperty<*>).setter.call(obj, jsonObject[memberName])
                     }
-
                 }
-
             }
-
         }
 
-        return jsonObject
+        return obj
     }
 
 }

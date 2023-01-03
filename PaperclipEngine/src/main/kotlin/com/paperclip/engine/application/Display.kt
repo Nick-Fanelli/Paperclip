@@ -138,9 +138,17 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         Logger.info("Created Display")
     }
 
-    private fun update() {
-        GL.setCapabilities(this.glCapabilities)
+    fun requestUpdate(callback: () -> Unit) {
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
+        callback()
+
+        glfwSwapBuffers(windowPtr)
+        glfwPollEvents()
+    }
+
+    private fun update() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 

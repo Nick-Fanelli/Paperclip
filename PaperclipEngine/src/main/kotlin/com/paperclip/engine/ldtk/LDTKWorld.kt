@@ -4,7 +4,6 @@ import com.paperclip.engine.asset.Asset
 import com.paperclip.engine.utils.FileUtils
 import com.paperclip.engine.utils.JSONUtils
 import kotlin.reflect.KClass
-import kotlin.reflect.full.hasAnnotation
 
 class LDTKWorld : Asset {
 
@@ -14,12 +13,20 @@ class LDTKWorld : Asset {
 
         jsonText = FileUtils.readResourceFileAsString(kClass, path)
 
-        val jsonTarget = LDTKWorldJSONTarget()
-        JSONUtils.parseJson(jsonText, jsonTarget)
+        val parsedJSONObject = JSONUtils.parseJson(jsonText)
+        val jsonTarget = JSONUtils.jsonToObject<LDTKWorldJSONTarget>(parsedJSONObject)
 
-//        println(jsonTarget)
+        this.createFromJSONObject(jsonTarget)
 
         return this
+    }
+
+    private fun createFromJSONObject(json: LDTKWorldJSONTarget) {
+
+        json.levels.forEach {
+            println(it)
+        }
+
     }
 
     override fun onDestroy() {

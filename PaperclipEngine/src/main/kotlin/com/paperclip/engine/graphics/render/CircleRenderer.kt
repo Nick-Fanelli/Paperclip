@@ -53,7 +53,6 @@ class CircleRenderer(override val parentScene: Scene, private val camera: Camera
     private lateinit var vertices: FloatArray
 
     private var vertexPtr = 0
-    private var indexCount = 0
 
     private var vaoID = 0
     private var vboID = 0
@@ -142,7 +141,7 @@ class CircleRenderer(override val parentScene: Scene, private val camera: Camera
 
         GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboID)
 
-        GL11.glDrawElements(GL30.GL_TRIANGLES, indexCount, GL30.GL_UNSIGNED_INT, 0)
+        GL11.glDrawElements(GL30.GL_TRIANGLES, (vertexPtr / vertexFloatCount) * 6, GL30.GL_UNSIGNED_INT, 0) // 6 indices per vertex
 
         GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, 0)
 
@@ -217,8 +216,6 @@ class CircleRenderer(override val parentScene: Scene, private val camera: Camera
 
             addVertex(Vector3f(xPos, yPos, transform.position.z), color, uvCoords[i])
         }
-
-        indexCount += 6 // 6 indices per quad
     }
 
 

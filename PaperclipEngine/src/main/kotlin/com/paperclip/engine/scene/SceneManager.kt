@@ -13,7 +13,9 @@ class SceneManager(val application: Application) {
         input.bindCallbacks(windowPtr)
     }
 
-    fun <T: Scene> setScene(constructor: () -> T) {
+    fun <T: Scene> setScene(constructor: () -> T) = this.setScene(constructor())
+
+    fun <T: Scene> setScene(scene: T) {
         val prevCurrentScene = currentScene
 
         if(currentScene != null) {
@@ -21,13 +23,12 @@ class SceneManager(val application: Application) {
             prevCurrentScene?.onDestroy()
         }
 
-        val instantiatedScene: T = constructor()
+        scene.input = this.input
+        scene.application = this.application
+        scene.onCreate()
+        scene.onStart()
 
-        instantiatedScene.input = this.input
-        instantiatedScene.application = this.application
-        instantiatedScene.onCreate()
-
-        currentScene = instantiatedScene
+        currentScene = scene
     }
 
     fun onUpdate(deltaTime: Float) {

@@ -29,10 +29,10 @@ open class Application( private val projectScope: KClass<*>,
         sceneManager = SceneManager(this)
         sceneManager.createInput(display.windowPtr)
 
+        display.addWindowResizeCallback(::windowResize)
+
         if(startingScene != null)
             sceneManager.setScene(startingScene)
-
-        display.addWindowResizeCallback(::windowResize)
 
         Logger.info("Starting Display Continuous Loop")
         display.continuouslyUpdateDisplayUntilCloseRequested()
