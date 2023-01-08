@@ -1,4 +1,4 @@
-package com.paperclip.engine.graphics
+package com.paperclip.engine.math
 
 import com.paperclip.engine.math.Vector3f
 

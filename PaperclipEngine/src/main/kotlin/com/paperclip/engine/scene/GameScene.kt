@@ -1,7 +1,7 @@
 package com.paperclip.engine.scene
 
 import com.paperclip.engine.asset.AssetManager
-import com.paperclip.engine.graphics.Transform
+import com.paperclip.engine.math.Transform
 import com.paperclip.engine.graphics.camera.OrthographicCamera
 import com.paperclip.engine.graphics.render.CircleRenderer
 import com.paperclip.engine.graphics.render.QuadRenderer

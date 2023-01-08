@@ -2,8 +2,7 @@ package com.paperclip.editor
 
 import com.paperclip.editor.imgui.ImGuiLayer
 import com.paperclip.engine.application.Input
-import com.paperclip.engine.graphics.Transform
-import com.paperclip.engine.math.Vector2f
+import com.paperclip.engine.math.Transform
 import com.paperclip.engine.math.Vector3f
 import com.paperclip.engine.math.Vector4f
 import com.paperclip.engine.scene.GameScene

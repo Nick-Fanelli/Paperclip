@@ -1,6 +1,6 @@
 package com.paperclip.engine.scene
 
-import com.paperclip.engine.graphics.Transform
+import com.paperclip.engine.math.Transform
 import com.paperclip.engine.math.Vector4f
 
 abstract class Component() {

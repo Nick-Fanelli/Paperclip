@@ -2,7 +2,7 @@ package com.paperclip.engine.graphics.render
 
 import com.paperclip.engine.graphics.Shader
 import com.paperclip.engine.graphics.ShaderUniformLocation
-import com.paperclip.engine.graphics.Transform
+import com.paperclip.engine.math.Transform
 import com.paperclip.engine.graphics.camera.Camera
 import com.paperclip.engine.math.Vector2f
 import com.paperclip.engine.math.Vector3f

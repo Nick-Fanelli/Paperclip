@@ -4,7 +4,7 @@ import com.paperclip.engine.physics2d.Physics2DWorld
 import com.paperclip.engine.utils.PaperclipEngineFatalException
 import kotlin.reflect.KClass
 
-data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
+open class Entity(val entityComponentSystem: EntityComponentSystem, val entityID: Int) {
 
     inline fun <reified T: Component> addComponent(component: T) : T = entityComponentSystem.addComponent(entityID, component)
     inline fun <reified T: Component> getComponent() : T? = entityComponentSystem.getComponent(entityID)
@@ -18,7 +18,7 @@ data class Entity(val entityComponentSystem: EntityComponentSystem, val entityID
 
 data class ComponentPair<T: Component, V: Component>(val entityID: Int, val first: T, val second: V)
 
-class EntityComponentSystem() {
+class EntityComponentSystem {
 
     private var entitiesSize: Int = 0
     private val erasedEntityIDs: ArrayList<Int> = ArrayList()

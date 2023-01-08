@@ -2,9 +2,7 @@ package com.paperclip.samples.internal
 
 import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
-import com.paperclip.engine.graphics.Transform
 import com.paperclip.engine.ldtk.LDTKWorld
-import com.paperclip.engine.math.Vector3f
 import com.paperclip.engine.scene.*
 
 fun main() {
