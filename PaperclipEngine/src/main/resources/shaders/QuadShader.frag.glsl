@@ -12,5 +12,5 @@ void main() {
 
     int textureID = int(vTextureID);
 
-    outColor = vColor * texture(uTextures[0], vTextureCoord);
+    outColor = vColor * texture(uTextures[textureID], vTextureCoord);
 }

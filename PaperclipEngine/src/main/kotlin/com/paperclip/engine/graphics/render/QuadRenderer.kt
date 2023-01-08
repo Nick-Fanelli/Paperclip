@@ -2,6 +2,7 @@ package com.paperclip.engine.graphics.render
 
 import com.paperclip.engine.graphics.Shader
 import com.paperclip.engine.graphics.ShaderUniformLocation
+import com.paperclip.engine.graphics.Texture
 import com.paperclip.engine.math.Transform
 import com.paperclip.engine.graphics.camera.Camera
 import com.paperclip.engine.math.Vector2f
@@ -239,8 +240,22 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         vertexPtr += VERTEX_FLOAT_COUNT
     }
 
-    fun drawQuad(transform: Transform, color: Vector4f = Vector4f(1.0f)) {
+    fun drawQuad(transform: Transform, color: Vector4f = Vector4f(1.0f), texture: Texture? = null) {
         allocateQuad()
+
+        var textureID = 0
+
+        if(texture != null) {
+            textureID = textures.indexOf(texture.textureID)
+
+            if (textureID == -1) {
+                textureID = textureCount
+                textures[textureCount] = texture.textureID
+                textureCount++
+            }
+
+            println(textureID)
+        }
 
         for(i in 0..3) {
             var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
@@ -256,7 +271,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
                 yPos = ry
             }
 
-            addVertex(Vector3f(xPos, yPos, transform.position.z), color, 0, quadTextureCoords[i])
+            addVertex(Vector3f(xPos, yPos, transform.position.z), color, textureID, quadTextureCoords[i])
         }
     }
 

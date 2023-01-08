@@ -3,6 +3,7 @@ package com.paperclip.samples.internal
 import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
 import com.paperclip.engine.graphics.Texture
+import com.paperclip.engine.math.Vector4f
 import com.paperclip.engine.scene.*
 import com.paperclip.engine.utils.RuntimeConfig
 
@@ -11,10 +12,10 @@ fun main() {
         .startApplication()
 }
 
-private class ImageEntity(entity: Entity) {
+private class ImageEntity(entity: Entity, texture: Texture) {
 
     val transformComponent = entity.addComponent(TransformComponent())
-    val quadRendererComponent = entity.addComponent(QuadRendererComponent())
+    val quadRendererComponent = entity.addComponent(QuadRendererComponent(Vector4f(1.0f), texture))
 
 }
 
@@ -29,9 +30,7 @@ class SpriteRenderingExampleScene : GameScene() {
 
         minecraftGrassTexture = assetManager.get(Texture::class, "/textures/minecraft-grass.png")
 
-        imageEntity = ImageEntity(createEntity())
-
-        println(RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots)
+        imageEntity = ImageEntity(createEntity(), minecraftGrassTexture)
     }
 
     override fun onUpdate(deltaTime: Float) {

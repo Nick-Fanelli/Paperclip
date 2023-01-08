@@ -67,7 +67,7 @@ open class GameScene : Scene() {
         quadRenderer.begin()
         quadRenderers.forEach {
             if(it.first.isActive)
-                quadRenderer.drawQuad(it.second.transform, it.first.color)
+                quadRenderer.drawQuad(it.second.transform, it.first.color, it.first.texture)
         }
         quadRenderer.end()
 
