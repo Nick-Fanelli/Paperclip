@@ -2,6 +2,7 @@ package com.paperclip.engine.graphics
 
 import com.paperclip.engine.utils.FileUtils
 import com.paperclip.engine.utils.PaperclipEngineFatalException
+import com.paperclip.engine.utils.RuntimeConfig
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
@@ -9,7 +10,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 
 data class ShaderUniformLocation(val uniformLocationID: Int)
 
-class Shader(private val shaderName: String, private val replacements: HashMap<String, String> = HashMap()) {
+class Shader(private val shaderName: String) {
 
     private var programID = 0
 
@@ -21,10 +22,8 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
         var vertShader: String = FileUtils.readResourceFileAsString("/shaders/$shaderName.vert.glsl")
         var fragShader: String = FileUtils.readResourceFileAsString("/shaders/$shaderName.frag.glsl")
 
-        for(entry in replacements.entries) {
-            vertShader = vertShader.replace(entry.key.toRegex(), entry.value)
-            fragShader = fragShader.replace(entry.key.toRegex(), entry.value)
-        }
+        vertShader = vertShader.replace("_PAPERCLIP_MAX_TEXTURE_SLOTS_".toRegex(), RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots.toString())
+        fragShader = fragShader.replace("_PAPERCLIP_MAX_TEXTURE_SLOTS_".toRegex(), RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots.toString())
 
         shaders.add(attachShader(GL_VERTEX_SHADER, vertShader))
         shaders.add(attachShader(GL_FRAGMENT_SHADER, fragShader))
@@ -89,6 +88,10 @@ class Shader(private val shaderName: String, private val replacements: HashMap<S
         floatBuffer = matrix4f.get(floatBuffer)
 
         glUniformMatrix4fv(uniformLocation.uniformLocationID, false, floatBuffer)
+    }
+
+    fun addUniformIntArray(uniformLocation: ShaderUniformLocation, intArray: IntArray) {
+        glUniform1iv(uniformLocation.uniformLocationID, intArray)
     }
 
 }

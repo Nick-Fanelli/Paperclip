@@ -8,10 +8,13 @@ import com.paperclip.engine.math.Vector2f
 import com.paperclip.engine.math.Vector3f
 import com.paperclip.engine.math.Vector4f
 import com.paperclip.engine.scene.Scene
+import com.paperclip.engine.utils.RuntimeConfig
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30.*
+import java.util.Vector
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -45,6 +48,13 @@ private val quadVertexPositions = arrayOf(
     Vector2f(-0.5f, 0.5f)
 )
 
+private val quadTextureCoords = arrayOf(
+    Vector2f(0f, 0f),
+    Vector2f(1f, 0f),
+    Vector2f(1f, 1f),
+    Vector2f(0f, 1f)
+)
+
 open class QuadRenderer(override val parentScene: Scene, private val camera: Camera) : Renderer(parentScene) {
 
     private lateinit var shader: Shader
@@ -56,15 +66,23 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     private var vboID = 0
     private var iboID = 0
 
+    private var whiteTextureID = 0
+
+    private lateinit var textures: IntArray
+    private lateinit var textureSlots: IntArray
+    private var textureCount = 1 // Account for white texture
+
     private lateinit var uniformProjectionLocation: ShaderUniformLocation
     private lateinit var uniformViewLocation: ShaderUniformLocation
+    private lateinit var uniformTextures: ShaderUniformLocation
 
     override fun create() {
-        shader = Shader("DefaultShader")
+        shader = Shader("QuadShader")
         shader.createShader()
 
         uniformProjectionLocation = shader.getUniformLocation("uProjection")
         uniformViewLocation = shader.getUniformLocation("uView")
+        uniformTextures = shader.getUniformLocation("uTextures")
 
         vertices = FloatArray(BATCH_VERTEX_COUNT * VERTEX_FLOAT_COUNT)
 
@@ -111,6 +129,26 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         // Unbind
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
+
+        // White Texture
+        val whiteColor = BufferUtils.createIntBuffer(1)
+        whiteColor.put(0xffffff) // 1 = 0xf
+        whiteColor.flip()
+
+        whiteTextureID = glGenTextures()
+        glBindTexture(GL_TEXTURE_2D, whiteTextureID)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, whiteColor)
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+        textures = IntArray(RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots) { 0 }
+        textures[0] = whiteTextureID
+
+        textureSlots = IntArray(RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots)
+        for(i in textureSlots.indices) textureSlots[i] = i
     }
 
     private fun updateBatchVertexData() {
@@ -124,6 +162,12 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
         shader.addUniformMat4(uniformProjectionLocation, camera.projectionMatrix)
         shader.addUniformMat4(uniformViewLocation, camera.viewMatrix)
+        shader.addUniformIntArray(uniformTextures, textureSlots)
+
+        for(i in 0 until textureCount) {
+            glActiveTexture(GL_TEXTURE0 + i)
+            glBindTexture(GL_TEXTURE_2D, textures[i])
+        }
 
         glBindVertexArray(vaoID)
 
@@ -157,6 +201,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
     override fun begin() {
         vertexPtr = 0
+        textureCount = 1
     }
 
     override fun end() {
@@ -172,7 +217,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         GL15.glDeleteBuffers(iboID)
     }
 
-    private fun addVertex(position: Vector3f, color: Vector4f) {
+    private fun addVertex(position: Vector3f, color: Vector4f, textureID: Int, textureCoord: Vector2f) {
         // Position
         vertices[vertexPtr + 0] = position.x
         vertices[vertexPtr + 1] = position.y
@@ -185,11 +230,11 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         vertices[vertexPtr + 6] = color.w
 
         // Texture ID
-        vertices[vertexPtr + 7] = 0.0f
+        vertices[vertexPtr + 7] = textureID.toFloat()
 
         // Texture Coord
-        vertices[vertexPtr + 8] = 0.0f
-        vertices[vertexPtr + 9] = 0.0f
+        vertices[vertexPtr + 8] = textureCoord.x
+        vertices[vertexPtr + 9] = textureCoord.y
 
         vertexPtr += VERTEX_FLOAT_COUNT
     }
@@ -211,7 +256,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
                 yPos = ry
             }
 
-            addVertex(Vector3f(xPos, yPos, transform.position.z), color)
+            addVertex(Vector3f(xPos, yPos, transform.position.z), color, 0, quadTextureCoords[i])
         }
     }
 
