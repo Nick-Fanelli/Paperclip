@@ -59,7 +59,7 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     api("org.joml", "joml", jomlVersion)
 
-    implementation(files("/vendor/jbox2d-library-2.2.1.1.jar"))
+    implementation(files("vendor/jbox2d-library-2.2.1.1.jar"))
 
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
 }
