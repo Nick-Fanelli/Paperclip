@@ -4,6 +4,7 @@ import com.paperclip.engine.asset.AssetManager
 import com.paperclip.engine.scene.Scene
 import com.paperclip.engine.scene.SceneManager
 import com.paperclip.engine.utils.Logger
+import com.paperclip.engine.utils.RuntimeConfig
 import kotlin.reflect.KClass
 
 open class Application( private val projectScope: KClass<*>,
@@ -19,6 +20,7 @@ open class Application( private val projectScope: KClass<*>,
     private lateinit var sceneManager: SceneManager
 
     init {
+        RuntimeConfig.initialize()
         display.createDisplay(::onUpdate)
     }
 

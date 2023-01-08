@@ -2,6 +2,7 @@ package com.paperclip.engine.application
 
 import com.paperclip.engine.utils.Logger
 import com.paperclip.engine.utils.PaperclipEngineFatalException
+import com.paperclip.engine.utils.RuntimeConfig
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -13,7 +14,6 @@ import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.MemoryStack.stackPush
 import org.lwjgl.system.MemoryUtil.NULL
 import java.awt.Dimension
-import java.nio.IntBuffer
 
 private val DISPLAYS = ArrayList<Display>()
 
@@ -135,6 +135,7 @@ class Display(private val windowTitle: String, private var displayPreferences: D
         glfwShowWindow(windowPtr)
 
         this.glCapabilities = GL.createCapabilities()
+        RuntimeConfig.OpenGLRuntimeConfig.initialize()
 
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA)

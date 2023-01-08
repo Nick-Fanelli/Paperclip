@@ -4,6 +4,7 @@ import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
 import com.paperclip.engine.graphics.Texture
 import com.paperclip.engine.scene.*
+import com.paperclip.engine.utils.RuntimeConfig
 
 fun main() {
     Application(SpriteRenderingExampleScene::class, "Image Loading Example Scene", ::SpriteRenderingExampleScene)
@@ -29,6 +30,8 @@ class SpriteRenderingExampleScene : GameScene() {
         minecraftGrassTexture = assetManager.get(Texture::class, "/textures/minecraft-grass.png")
 
         imageEntity = ImageEntity(createEntity())
+
+        println(RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots)
     }
 
     override fun onUpdate(deltaTime: Float) {
