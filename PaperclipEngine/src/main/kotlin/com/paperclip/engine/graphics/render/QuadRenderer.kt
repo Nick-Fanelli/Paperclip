@@ -253,8 +253,6 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
                 textures[textureCount] = texture.textureID
                 textureCount++
             }
-
-            println(textureID)
         }
 
         for(i in 0..3) {

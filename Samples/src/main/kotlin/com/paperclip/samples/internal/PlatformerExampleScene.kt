@@ -17,7 +17,7 @@ class PlatformerExampleScene : GameScene() {
     override fun onCreate() {
         super.onCreate()
 
-//        world = assetManager.get(LDTKWorld::class, "/platformer.ldtk")
+        world = assetManager.get(LDTKWorld::class, "/platformer.ldtk")
     }
 
     override fun onUpdate(deltaTime: Float) {

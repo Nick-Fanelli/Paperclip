@@ -28,7 +28,7 @@ class SpriteRenderingExampleScene : GameScene() {
     override fun onCreate() {
         super.onCreate()
 
-        minecraftGrassTexture = assetManager.get(Texture::class, "/textures/minecraft-grass.png")
+        minecraftGrassTexture = assetManager.get(Texture::class, "/textures/paperclip-logo-orange.png")
 
         imageEntity = ImageEntity(createEntity(), minecraftGrassTexture)
     }

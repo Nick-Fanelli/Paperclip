@@ -1,10 +1,13 @@
 package com.paperclip.engine.scene
 
 import com.paperclip.engine.asset.AssetManager
+import com.paperclip.engine.graphics.Texture
 import com.paperclip.engine.math.Transform
 import com.paperclip.engine.graphics.camera.OrthographicCamera
 import com.paperclip.engine.graphics.render.CircleRenderer
 import com.paperclip.engine.graphics.render.QuadRenderer
+import com.paperclip.engine.math.Vector3f
+import com.paperclip.engine.math.Vector4f
 import com.paperclip.engine.physics2d.Physics2DWorld
 
 open class GameScene : Scene() {
@@ -51,12 +54,17 @@ open class GameScene : Scene() {
     }
 
     open fun onRenderLoadingScreen() {
-        // TODO: Replace with loading text
+
+        val paperclipBannerTexture = Texture()
+        paperclipBannerTexture.createFromPath(this::class, "/logos/paperclip-banner-transparent.png")
+
         application.display.requestUpdate {
             quadRenderer.begin()
-            quadRenderer.drawQuad(Transform())
+            quadRenderer.drawQuad(Transform(Vector3f(0.0f), Vector3f(2.325f, 0.5f, 0.0f)), Vector4f(1.0f), paperclipBannerTexture)
             quadRenderer.end()
         }
+
+        paperclipBannerTexture.onDestroy()
     }
 
     override fun onUpdate(deltaTime: Float) {

@@ -14,10 +14,9 @@ class Texture : Asset {
 
     var textureID = -1
         private set
-    var width = 0
-        private set
-    var height = 0
-        private set
+
+    private var width = 0
+    private var height = 0
 
     override fun createFromPath(kClass: KClass<*>, path: String): Asset {
         stbi_set_flip_vertically_on_load(true)
@@ -27,8 +26,8 @@ class Texture : Asset {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         val width = BufferUtils.createIntBuffer(1)
         val height = BufferUtils.createIntBuffer(1)
