@@ -21,6 +21,8 @@ object RuntimeConfig {
 
         private var isInitialized = false
 
+        val preferedGLSLVersion = "400"
+
         var availableGUPTextureSlots = -1
             private set
 

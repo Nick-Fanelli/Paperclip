@@ -1,6 +1,8 @@
 package com.paperclip.editor.imgui
 
 import com.paperclip.engine.application.Application
+import com.paperclip.engine.graphics.render.QuadRenderer
+import com.paperclip.engine.utils.RuntimeConfig
 import imgui.ImGui
 import imgui.ImGuiIO
 import imgui.flag.*
@@ -14,8 +16,9 @@ class ImGuiLayer() {
     private lateinit var imGuiImplGl3: ImGuiImplGl3
 
     private lateinit var io: ImGuiIO
+    private lateinit var quadRenderer: QuadRenderer
 
-    fun onCreate(application: Application) {
+    fun onCreate(application: Application, quadRenderer: QuadRenderer) {
         ImGui.createContext()
 
         io = ImGui.getIO()
@@ -27,7 +30,9 @@ class ImGuiLayer() {
         imGuiImplGlfw.init(application.display.windowPtr, true)
 
         imGuiImplGl3 = ImGuiImplGl3()
-        imGuiImplGl3.init()
+        imGuiImplGl3.init("#version ${RuntimeConfig.OpenGLRuntimeConfig.preferedGLSLVersion}")
+
+        this.quadRenderer = quadRenderer
 
         applyImGuiColors()
     }
@@ -51,6 +56,14 @@ class ImGuiLayer() {
     }
 
     private fun onImGuiRender() {
+
+        ImGui.begin("Renderer Stats")
+
+        ImGui.text("Render Batches: ${quadRenderer.renderBatches}")
+        ImGui.text("Frame Time: ${quadRenderer.frameTime}")
+
+        ImGui.end()
+
     }
 
     private val dockingWindowFlags = ImGuiWindowFlags.MenuBar or

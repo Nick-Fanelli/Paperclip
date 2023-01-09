@@ -40,7 +40,7 @@ class DisplayPreferences {
 
     var displayName: String? = null
     var displaySize = Dimension(1280, 720)
-    var isVsyncEnabled = true
+    var isVsyncEnabled = false
 
 }
 

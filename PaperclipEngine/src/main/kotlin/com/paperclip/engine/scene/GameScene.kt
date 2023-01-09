@@ -23,8 +23,8 @@ open class GameScene : Scene() {
     private var quadRenderers: ArrayList<ComponentPair<QuadRendererComponent, TransformComponent>> = ArrayList()
     private var circleRenderers: ArrayList<ComponentPair<CircleRendererComponent, TransformComponent>> = ArrayList()
 
-    private lateinit var quadRenderer: QuadRenderer
-    private lateinit var circleRenderer: CircleRenderer
+    lateinit var quadRenderer: QuadRenderer
+    lateinit var circleRenderer: CircleRenderer
 
     fun createEntity() : Entity = entityComponentSystem.createEntity()
     fun destroyEntity(entity: Entity) = entityComponentSystem.destroyEntity(entity)
@@ -72,12 +72,14 @@ open class GameScene : Scene() {
     }
 
     override fun onRender() {
+        quadRenderer.beginFrame()
         quadRenderer.begin()
         quadRenderers.forEach {
             if(it.first.isActive)
                 quadRenderer.drawQuad(it.second.transform, it.first.color, it.first.texture)
         }
         quadRenderer.end()
+        quadRenderer.endFrame()
 
         circleRenderer.begin()
         circleRenderers.forEach {

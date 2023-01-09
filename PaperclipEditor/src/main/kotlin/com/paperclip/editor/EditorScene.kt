@@ -18,7 +18,9 @@ class EditorScene : GameScene() {
     override fun onCreate() {
         super.onCreate()
 
-        this.imGuiLayer.onCreate(super.application)
+        this.imGuiLayer.onCreate(super.application, quadRenderer)
+
+        var numEntities = 0
 
         var x = -10.0f
         while(x < 10.0f) {
@@ -28,9 +30,16 @@ class EditorScene : GameScene() {
                 entity.addComponent(TransformComponent(Transform(Vector3f(x, y, 0.0f), Vector3f(0.25f))))
                 entity.addComponent(QuadRendererComponent(Vector4f((x + 10.0f) / 20.0f, 0.2f, (y + 10.0f) / 20.0f, 1.0f)))
                 y += 0.25f
+                numEntities++
             }
             x += 0.25f
         }
+
+        println(numEntities)
+
+        val entity = createEntity()
+        entity.addComponent(TransformComponent())
+        entity.addComponent(QuadRendererComponent())
 
         windowSize = this.application.display.getWindowSize()
         this.application.display.addWindowResizeCallback(this::onWindowResize)
@@ -47,8 +56,8 @@ class EditorScene : GameScene() {
         }
 
         if(input.scrollPosition.y != 0f) {
-            camera.zoom -= (deltaTime * input.scrollPosition.y * this.camera.zoom * EditorConfig.editorZoomSpeed)
-            if(camera.zoom < 0f) camera.zoom = 0f
+            camera.zoom -= (input.scrollPosition.y * this.camera.zoom * EditorConfig.editorZoomSpeed)
+            if(camera.zoom < 0.0001f) camera.zoom = 0.0001f
         }
 
         if(input.isKey(Input.KEY_ESCAPE)) {

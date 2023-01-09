@@ -69,6 +69,14 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
 
     private var whiteTextureID = 0
 
+    var renderBatches = 0
+        private set
+
+    var frameTime = 0.0f
+        private set
+
+    private var beginFrameTime = 0.0f
+
     private lateinit var textures: IntArray
     private lateinit var textureSlots: IntArray
     private var textureCount = 1 // Account for white texture
@@ -219,6 +227,11 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         }
     }
 
+    fun beginFrame() {
+        renderBatches = 0
+        beginFrameTime = System.nanoTime().toFloat()
+    }
+
     override fun begin() {
         vertexPtr = 0
         textureCount = 1
@@ -227,6 +240,12 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     override fun end() {
         updateBatchVertexData()
         render()
+
+        renderBatches++
+    }
+
+    fun endFrame() {
+        frameTime = (System.nanoTime().toFloat() - beginFrameTime) / 1000000f
     }
 
     override fun destroy() {
@@ -263,7 +282,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         allocateQuad()
 
         val textureID = if(texture == null) 0 else getLocalTextureID(texture.textureID)
-        
+
         for(i in 0..3) {
             var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
             var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
