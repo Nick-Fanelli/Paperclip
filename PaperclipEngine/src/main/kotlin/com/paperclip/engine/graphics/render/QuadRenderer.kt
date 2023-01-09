@@ -193,6 +193,25 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         glUseProgram(0)
     }
 
+    private fun getLocalTextureID(textureID: Int) : Int {
+
+        var localTextureID = textures.indexOf(textureID)
+
+        if(localTextureID == -1) {
+            if(textureCount >= RuntimeConfig.OpenGLRuntimeConfig.availableGUPTextureSlots) {
+                end()
+                begin()
+            }
+
+            localTextureID = textureCount
+            textures[textureCount] = textureID
+            textureCount++
+        }
+
+        return localTextureID
+
+    }
+
     private fun allocateQuad() {
         if(vertexPtr + (VERTEX_FLOAT_COUNT * 4) >= vertices.size) {
             end()
@@ -243,18 +262,8 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
     fun drawQuad(transform: Transform, color: Vector4f = Vector4f(1.0f), texture: Texture? = null) {
         allocateQuad()
 
-        var textureID = 0
-
-        if(texture != null) {
-            textureID = textures.indexOf(texture.textureID)
-
-            if (textureID == -1) {
-                textureID = textureCount
-                textures[textureCount] = texture.textureID
-                textureCount++
-            }
-        }
-
+        val textureID = if(texture == null) 0 else getLocalTextureID(texture.textureID)
+g
         for(i in 0..3) {
             var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
             var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
