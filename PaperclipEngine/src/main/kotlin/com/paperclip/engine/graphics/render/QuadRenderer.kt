@@ -263,7 +263,7 @@ open class QuadRenderer(override val parentScene: Scene, private val camera: Cam
         allocateQuad()
 
         val textureID = if(texture == null) 0 else getLocalTextureID(texture.textureID)
-g
+        
         for(i in 0..3) {
             var xPos = transform.position.x + (quadVertexPositions[i].x * transform.scale.x)
             var yPos = transform.position.y + (quadVertexPositions[i].y * transform.scale.y)
