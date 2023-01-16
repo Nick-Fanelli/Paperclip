@@ -4,6 +4,7 @@ import com.paperclip.engine.application.Application
 import com.paperclip.engine.application.Input
 import com.paperclip.engine.ldtk.LDTKWorld
 import com.paperclip.engine.scene.*
+import jdk.jfr.Timestamp
 
 fun main() {
     val application = Application(PlatformerExampleScene::class, "Platformer Example", ::PlatformerExampleScene)
